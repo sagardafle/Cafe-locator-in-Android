@@ -1,5 +1,6 @@
 package com.example.sagar.restaurantlocatorinandroid;
 
+
 import android.content.pm.PackageManager;
 import android.location.Location;
 import android.os.Build;
@@ -7,15 +8,21 @@ import android.os.Bundle;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.widget.Toast;
 
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.common.api.GoogleApiClient.ConnectionCallbacks;
 import com.google.android.gms.common.api.GoogleApiClient.OnConnectionFailedListener;
+import com.google.android.gms.common.api.Status;
 import com.google.android.gms.location.LocationListener;
 import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationServices;
+import com.google.android.gms.location.places.Place;
+import com.google.android.gms.location.places.Places;
+import com.google.android.gms.location.places.ui.PlaceAutocompleteFragment;
+import com.google.android.gms.location.places.ui.PlaceSelectionListener;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
@@ -31,191 +38,36 @@ public class MapsActivity extends AppCompatActivity implements
         OnConnectionFailedListener,
         LocationListener {
 
-//    //Define a request code to send to Google Play services
-//    private final static int CONNECTION_FAILURE_RESOLUTION_REQUEST = 9000;
-//    private GoogleApiClient mGoogleApiClient;
-//    private LocationRequest mLocationRequest;
-//    private double currentLatitude;
-//    private double currentLongitude;
-//    private LocationManager manager;
-//
-//
-//
-//    @Override
-//    protected void onCreate(Bundle savedInstanceState) {
-//        super.onCreate(savedInstanceState);
-//        setContentView(R.layout.activity_maps);
-//
-//        Context mContext = this;
-//
-//        manager = (LocationManager) mContext.getSystemService(Context.LOCATION_SERVICE);
-//
-//        createLocationRequest();
-//
-//        mGoogleApiClient = new GoogleApiClient.Builder(mContext)
-//                .addConnectionCallbacks(this)
-//                .addOnConnectionFailedListener(this)
-//                .addApi(LocationServices.API)
-//                .build();
-//        mGoogleApiClient.connect();
-//        mGoogleApiClient.setMyLocationEnabled(true);
-//
-//    }
-//
-//
-//    private void createLocationRequest(){
-//        Log.d("createLocationRequest" , " called");
-//
-//        mLocationRequest = LocationRequest.create();
-//        mLocationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
-//        mLocationRequest.setInterval(10 * 1000);
-//        mLocationRequest.setFastestInterval(1 * 1000);
-//    }
-//
-//
-//    @Override
-//    protected void onResume() {
-//        Log.d("onResume" , " called");
-//        super.onResume();
-//        if (manager.isProviderEnabled(LocationManager.GPS_PROVIDER) ) {
-//            if (mGoogleApiClient != null) {
-//                mGoogleApiClient.connect();
-//            }
-//        }else{
-//            // Showyourmesg();
-//        }
-//    }
-//
-//    @Override
-//    protected void onStart() {
-//        Log.d("onStart +" , " called");
-//        super.onStart();
-//        if (mGoogleApiClient != null) {
-//            mGoogleApiClient.disconnect();
-//        }
-//    }
-//
-//    @Override
-//    protected void onPause() {
-//        Log.d("onPause" , " called");
-//        super.onPause();
-//        if (mGoogleApiClient != null) {
-//            mGoogleApiClient.disconnect();
-//        }
-//    }
-//
-//    protected void startLocationUpdates(){
-//        Log.d("startLocationUpdates" , " called");
-//        int permissionCheck = ContextCompat.checkSelfPermission(this,
-//                android.Manifest.permission.ACCESS_FINE_LOCATION);
-//        LocationServices.FusedLocationApi.requestLocationUpdates(mGoogleApiClient,
-//                mLocationRequest,this);
-//    }
-//
-//    protected void stopLocationUpdates() {
-//        Log.d("stopLocationUpdates" , " called");
-//        LocationServices.FusedLocationApi.removeLocationUpdates(
-//                mGoogleApiClient, this);
-//    }
-//
-//
-//
-//    /**
-//     * If connected get lat and long
-//     *
-//     */
-//    @Override
-//    public void onConnected(Bundle bundle) {
-//        Log.d("connected" , " called");
-//        int permissionCheck = ContextCompat.checkSelfPermission(this,
-//                android.Manifest.permission.ACCESS_FINE_LOCATION);
-//
-//
-//            Location location = LocationServices.FusedLocationApi.getLastLocation(mGoogleApiClient);
-//
-//            if (location == null) {
-//                LocationServices.FusedLocationApi.requestLocationUpdates(mGoogleApiClient, mLocationRequest, this);
-//                Log.d("In ", " if loop");
-//                Log.d(" location" , String.valueOf(location));
-//
-//            } else {
-//                //If everything went fine lets get latitude and longitude
-//                currentLatitude = location.getLatitude();
-//                currentLongitude = location.getLongitude();
-//
-//
-//                Log.d("currentLatitude ", String.valueOf(currentLatitude));
-//
-//                Log.d("currentLongitude ", String.valueOf(currentLongitude));
-//
-//                Toast.makeText(this, currentLatitude + " WORKS " + currentLongitude + "", Toast.LENGTH_LONG).show();
-//            }
-//    }
-//
-//
-//    @Override
-//    public void onConnectionSuspended(int i) {}
-//
-//    @Override
-//    public void onConnectionFailed(ConnectionResult connectionResult) {
-//            /*
-//             * Google Play services can resolve some errors it detects.
-//             * If the error has a resolution, try sending an Intent to
-//             * start a Google Play services activity that can resolve
-//             * error.
-//             */
-//        if (connectionResult.hasResolution()) {
-//            try {
-//                // Start an Activity that tries to resolve the error
-//                connectionResult.startResolutionForResult(this, CONNECTION_FAILURE_RESOLUTION_REQUEST);
-//                    /*
-//                     * Thrown if Google Play services canceled the original
-//                     * PendingIntent
-//                     */
-//            } catch (IntentSender.SendIntentException e) {
-//                // Log the error
-//                e.printStackTrace();
-//            }
-//        } else {
-//                /*
-//                 * If no resolution is available, display a dialog to the
-//                 * user with the error.
-//                 */
-//            Log.e("Error", "Location services connection failed with code " + connectionResult.getErrorCode());
-//        }
-//    }
-//
-//    /**
-//     * If locationChanges change lat and long
-//     *
-//     *
-//     * @param location
-//     */
-//    @Override
-//    public void onLocationChanged(Location location) {
-//        Log.d("onLocationChanged ", " called");
-//        currentLatitude = location.getLatitude();
-//        currentLongitude = location.getLongitude();
-//
-//        Log.d("currentLatitude ", String.valueOf(currentLatitude));
-//
-//        Log.d("currentLongitude ", String.valueOf(currentLongitude));
-//
-//        Toast.makeText(this, currentLatitude + " WORKS " + currentLongitude + "", Toast.LENGTH_LONG).show();
-//    }
-
     GoogleMap mGoogleMap;
     SupportMapFragment mapFrag;
     LocationRequest mLocationRequest;
     GoogleApiClient mGoogleApiClient;
     Location mLastLocation;
     Marker mCurrLocationMarker;
+    private static final String TAG = "MapsActivity";
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_maps);
+
+        PlaceAutocompleteFragment autocompleteFragment = (PlaceAutocompleteFragment)
+                getFragmentManager().findFragmentById(R.id.place_autocomplete_fragment);
+
+        autocompleteFragment.setOnPlaceSelectedListener(new PlaceSelectionListener() {
+            @Override
+            public void onPlaceSelected(Place place) {
+                // TODO: Get info about the selected place.
+                Log.i(TAG, "Place: " + place.getName());
+            }
+
+            @Override
+            public void onError(Status status) {
+                // TODO: Handle the error.
+                Log.i(TAG, "An error occurred: " + status);
+            }
+        });
 
         if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             checkLocationPermission();
@@ -261,6 +113,8 @@ public class MapsActivity extends AppCompatActivity implements
                 .addConnectionCallbacks(this)
                 .addOnConnectionFailedListener(this)
                 .addApi(LocationServices.API)
+                .addApi(Places.GEO_DATA_API)
+                .addApi(Places.PLACE_DETECTION_API)
                 .build();
         mGoogleApiClient.connect();
     }
@@ -312,6 +166,7 @@ public class MapsActivity extends AppCompatActivity implements
 
     public static final int MY_PERMISSIONS_REQUEST_LOCATION = 99;
     public boolean checkLocationPermission(){
+        Log.d("Inside " , "check permsission");
         if (ContextCompat.checkSelfPermission(this,
                 android.Manifest.permission.ACCESS_FINE_LOCATION)
                 != PackageManager.PERMISSION_GRANTED) {
@@ -325,6 +180,7 @@ public class MapsActivity extends AppCompatActivity implements
                 // sees the explanation, try again to request the permission.
 
                 //Prompt the user once explanation has been shown
+                Log.d("IF Requesting " , " the permission");
                 ActivityCompat.requestPermissions(this,
                         new String[]{android.Manifest.permission.ACCESS_FINE_LOCATION},
                         MY_PERMISSIONS_REQUEST_LOCATION);
@@ -332,12 +188,14 @@ public class MapsActivity extends AppCompatActivity implements
 
             } else {
                 // No explanation needed, we can request the permission.
+                Log.d("ELSE Requesting " , " the permission");
                 ActivityCompat.requestPermissions(this,
                         new String[]{android.Manifest.permission.ACCESS_FINE_LOCATION},
                         MY_PERMISSIONS_REQUEST_LOCATION);
             }
             return false;
         } else {
+            Log.d("OUTER" , "ELSE");
             return true;
         }
     }
