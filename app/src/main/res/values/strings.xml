@@ -1,0 +1,7 @@
+<resources>
+    <string name="app_name">RestaurantLocatorInAndroid</string>
+    <string name="title_activity_maps">Map</string>
+    <string name="error_permission_map">ERROR RE BABA</string>
+    <string name="google_maps_key" templateMergeStrategy="preserve" translatable="false"> AIzaSyBFt7MuTiPiGeyQlJjOWSM2MO9R1d0PEvA </string>
+
+</resources>
