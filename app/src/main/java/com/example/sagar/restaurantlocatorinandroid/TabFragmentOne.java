@@ -16,7 +16,10 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.AutoCompleteTextView;
 import android.widget.Toast;
+import android.widget.AdapterView.OnItemClickListener;
 
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
@@ -38,7 +41,8 @@ public class TabFragmentOne extends Fragment implements
         OnMapReadyCallback,
         GoogleApiClient.ConnectionCallbacks,
         GoogleApiClient.OnConnectionFailedListener,
-        LocationListener {
+        LocationListener,
+        OnItemClickListener{
 
     private static final String ARG_EXAMPLE = "this_is_a_constant";
     private String example_data;
@@ -71,10 +75,6 @@ public class TabFragmentOne extends Fragment implements
         if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             checkLocationPermission();
         }
-
-
-
-
     }
 
     @Nullable
@@ -82,11 +82,16 @@ public class TabFragmentOne extends Fragment implements
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
 
-      View myinflater = inflater.inflate(R.layout.fragment_one, container, false);
+        View myinflater = inflater.inflate(R.layout.fragment_one, container, false);
         mGoogleMap = ((MapFragment) getActivity().getFragmentManager()
                 .findFragmentById(R.id.map)).getMap();
 
 
+        AutoCompleteTextView autoCompView = (AutoCompleteTextView) getActivity().findViewById(R.id.autoCompleteTextView);
+
+        autoCompView.setAdapter(new GooglePlacesAutocompleteAdapter(getContext(), R.layout.list_item));
+
+        autoCompView.setOnItemClickListener(this);
 
         mGoogleMap.setMapType(GoogleMap.MAP_TYPE_HYBRID);
 
@@ -108,6 +113,16 @@ public class TabFragmentOne extends Fragment implements
     }
 
 
+    public void onItemClick(AdapterView adapterView, View view, int position, long id) {
+
+        String str = (String) adapterView.getItemAtPosition(position);
+
+        //Toast.makeText(this, str, Toast.LENGTH_SHORT).show();
+
+    }
+
+
+
 
     @Override
     public void onPause() {
@@ -121,7 +136,7 @@ public class TabFragmentOne extends Fragment implements
 
     @Override
     public void onMapReady(GoogleMap googleMap)
-   {
+    {
 //        Log.d("Inside ", " onMapReady");
 //        mGoogleMap=googleMap;
 //        mGoogleMap.setMapType(GoogleMap.MAP_TYPE_HYBRID);
