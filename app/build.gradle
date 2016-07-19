@@ -27,4 +27,6 @@ dependencies {
     compile 'com.google.android.gms:play-services-location:8.1.0'
     compile 'com.android.support:design:23.0.1'
     compile 'com.android.support:design:24.0.0'
+    compile 'org.apache.httpcomponents:httpcore:4.4.1'
+    compile 'org.apache.httpcomponents:httpclient:4.5'
 }

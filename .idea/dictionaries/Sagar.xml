@@ -2,7 +2,12 @@
   <dictionary name="Sagar">
     <words>
       <w>aurum</w>
+      <w>destlatitude</w>
+      <w>destlongitude</w>
+      <w>findnearby</w>
+      <w>inputaddress</w>
       <w>iotaconcepts</w>
+      <w>nearbylocation</w>
       <w>sagar</w>
     </words>
   </dictionary>

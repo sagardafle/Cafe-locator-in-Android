@@ -5,6 +5,8 @@ package com.example.sagar.restaurantlocatorinandroid;
  */
 
 import android.content.pm.PackageManager;
+import android.location.Address;
+import android.location.Geocoder;
 import android.location.Location;
 import android.os.Build;
 import android.os.Bundle;
@@ -17,9 +19,9 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemClickListener;
 import android.widget.AutoCompleteTextView;
 import android.widget.Toast;
-import android.widget.AdapterView.OnItemClickListener;
 
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
@@ -27,6 +29,7 @@ import com.google.android.gms.location.LocationListener;
 import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.location.places.Places;
+import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapFragment;
@@ -37,14 +40,18 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 
+import java.io.IOException;
+import java.util.List;
+
 public class TabFragmentOne extends Fragment implements
         OnMapReadyCallback,
         GoogleApiClient.ConnectionCallbacks,
         GoogleApiClient.OnConnectionFailedListener,
         LocationListener,
-        OnItemClickListener{
+        OnItemClickListener {
 
     private static final String ARG_EXAMPLE = "this_is_a_constant";
+    private static final float DEFAULTZOOM = 16.0f;
     private String example_data;
     GoogleMap mGoogleMap;
     SupportMapFragment mapFrag;
@@ -103,8 +110,7 @@ public class TabFragmentOne extends Fragment implements
                 buildGoogleApiClient();
                 mGoogleMap.setMyLocationEnabled(true);
             }
-        }
-        else {
+        } else {
             buildGoogleApiClient();
             mGoogleMap.setMyLocationEnabled(true);
         }
@@ -114,14 +120,42 @@ public class TabFragmentOne extends Fragment implements
 
 
     public void onItemClick(AdapterView adapterView, View view, int position, long id) {
-
+        Log.d("Inside", "onItemClick");
         String str = (String) adapterView.getItemAtPosition(position);
-
-        //Toast.makeText(this, str, Toast.LENGTH_SHORT).show();
-
+        Log.d("The selected place is", str);
+        try {
+            getLatLong(str);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
+    private void getLatLong(String inputaddress) throws IOException {
+        Geocoder mygeocoder = new Geocoder(this.getContext());
+        List<android.location.Address> gclist;
+        gclist = mygeocoder.getFromLocationName(inputaddress, 1);
+        Address add = gclist.get(0);
+        String locality = add.getLocality();
+        double latitude = add.getLatitude();
+        double longitude = add.getLongitude();
+        gotoLocation(latitude, longitude, DEFAULTZOOM);
+    }
 
+    private void gotoLocation(double latitude, double longitude, float zoom) {
+        LatLng ll = new LatLng(latitude, longitude);
+        Log.d("Dest lat", String.valueOf(latitude));
+        Log.d("Dest lng", String.valueOf(longitude));
+        CameraUpdate update = CameraUpdateFactory.newLatLngZoom(ll, zoom);
+        mGoogleMap.moveCamera(update);
+        MarkerOptions markerOptions = new MarkerOptions();
+        markerOptions.position(ll);
+        markerOptions.title("Restaurant");
+        markerOptions.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_RED));
+        mCurrLocationMarker = mGoogleMap.addMarker(markerOptions);
+
+        GetNearByLocation nearbylocation = new GetNearByLocation(mGoogleMap, latitude, longitude);
+        nearbylocation.findnearbyCafes();
+    }
 
 
     @Override
@@ -135,25 +169,8 @@ public class TabFragmentOne extends Fragment implements
     }
 
     @Override
-    public void onMapReady(GoogleMap googleMap)
-    {
-//        Log.d("Inside ", " onMapReady");
-//        mGoogleMap=googleMap;
-//        mGoogleMap.setMapType(GoogleMap.MAP_TYPE_HYBRID);
-//
-//        //Initialize Google Play Services
-//        if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-//            if (ContextCompat.checkSelfPermission(this.getActivity(),
-//                    android.Manifest.permission.ACCESS_FINE_LOCATION)
-//                    == PackageManager.PERMISSION_GRANTED) {
-//                buildGoogleApiClient();
-//                mGoogleMap.setMyLocationEnabled(true);
-//            }
-//        }
-//        else {
-//            buildGoogleApiClient();
-//            mGoogleMap.setMyLocationEnabled(true);
-//        }
+    public void onMapReady(GoogleMap googleMap) {
+
     }
 
     protected synchronized void buildGoogleApiClient() {
@@ -182,14 +199,15 @@ public class TabFragmentOne extends Fragment implements
     }
 
     @Override
-    public void onConnectionSuspended(int i) {}
+    public void onConnectionSuspended(int i) {
+    }
 
     @Override
-    public void onConnectionFailed(ConnectionResult connectionResult) {}
+    public void onConnectionFailed(ConnectionResult connectionResult) {
+    }
 
     @Override
-    public void onLocationChanged(Location location)
-    {
+    public void onLocationChanged(Location location) {
         Log.d("Inside ", " onLocationChanged");
         mLastLocation = location;
         if (mCurrLocationMarker != null) {
@@ -215,8 +233,9 @@ public class TabFragmentOne extends Fragment implements
     }
 
     public static final int MY_PERMISSIONS_REQUEST_LOCATION = 99;
-    public boolean checkLocationPermission(){
-        Log.d("Inside " , "check permsission");
+
+    public boolean checkLocationPermission() {
+        Log.d("Inside ", "check permsission");
         if (ContextCompat.checkSelfPermission(this.getActivity(),
                 android.Manifest.permission.ACCESS_FINE_LOCATION)
                 != PackageManager.PERMISSION_GRANTED) {
@@ -230,7 +249,7 @@ public class TabFragmentOne extends Fragment implements
                 // sees the explanation, try again to request the permission.
 
                 //Prompt the user once explanation has been shown
-                Log.d("IF Requesting " , " the permission");
+                Log.d("IF Requesting ", " the permission");
                 ActivityCompat.requestPermissions(this.getActivity(),
                         new String[]{android.Manifest.permission.ACCESS_FINE_LOCATION},
                         MY_PERMISSIONS_REQUEST_LOCATION);
@@ -238,14 +257,14 @@ public class TabFragmentOne extends Fragment implements
 
             } else {
                 // No explanation needed, we can request the permission.
-                Log.d("ELSE Requesting " , " the permission");
+                Log.d("ELSE Requesting ", " the permission");
                 ActivityCompat.requestPermissions(this.getActivity(),
                         new String[]{android.Manifest.permission.ACCESS_FINE_LOCATION},
                         MY_PERMISSIONS_REQUEST_LOCATION);
             }
             return false;
         } else {
-            Log.d("OUTER" , "ELSE");
+            Log.d("OUTER", "ELSE");
             return true;
         }
     }
