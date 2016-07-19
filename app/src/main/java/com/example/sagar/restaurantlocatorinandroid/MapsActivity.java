@@ -24,7 +24,7 @@ public class MapsActivity extends AppCompatActivity {
     private static final String TAG = "MapsActivity";
     private ViewPager viewPager;
     private TabLayout tabLayout;
-    private int[] tabIcons = {android.R.drawable.ic_menu_camera,android.R.drawable.ic_menu_agenda,android.R.drawable.ic_menu_add};
+    private int[] tabIcons = {R.drawable.ic_menu_map,R.drawable.ic_menu_list};
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
