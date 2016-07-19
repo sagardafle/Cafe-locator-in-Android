@@ -87,7 +87,7 @@ public class TabFragmentOne extends Fragment implements
                 .findFragmentById(R.id.map)).getMap();
 
 
-        AutoCompleteTextView autoCompView = (AutoCompleteTextView) getActivity().findViewById(R.id.autoCompleteTextView);
+        AutoCompleteTextView autoCompView = (AutoCompleteTextView) myinflater.findViewById(R.id.autoCompleteTextView);
 
         autoCompView.setAdapter(new GooglePlacesAutocompleteAdapter(getContext(), R.layout.list_item));
 
