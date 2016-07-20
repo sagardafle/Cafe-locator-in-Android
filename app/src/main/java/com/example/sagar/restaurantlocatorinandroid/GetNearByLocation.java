@@ -35,6 +35,7 @@ public class GetNearByLocation {
     private static final String API_KEY = "&key=AIzaSyAUOx1zt79BHU9g0uFA00OydezvAd3UU1Q";
 
     GoogleMap mGoogleMap;
+    static ArrayList<Places> arrayList = new ArrayList<Places>();
     double destlatitude, destlongitude;
 
     public GetNearByLocation(GoogleMap mGoogleMap, double destlatitude, double destlongitude) {
@@ -60,7 +61,6 @@ public class GetNearByLocation {
         try {
             new CallHTTPServices().execute(urlString);
         } catch (Exception e) {
-            //Log.e()
         }
 
     }
@@ -70,7 +70,6 @@ public class GetNearByLocation {
 
         @Override
         protected String doInBackground(String... params) {
-//            NodeCallAPI nodeCallApi = new NodeCallAPI();
 
             Log.d("URL async", params[0]);
             StringBuilder content = new StringBuilder();
@@ -85,7 +84,7 @@ public class GetNearByLocation {
                 while ((line = bufferedReader.readLine()) != null) {
                     content.append(line + "\n");
                 }
-                Log.d("CONTENT!!!!!", content.toString());
+                Log.d("CONTENT!!", content.toString());
                 bufferedReader.close();
             } catch (Exception e) {
                 e.printStackTrace();
@@ -113,9 +112,17 @@ public class GetNearByLocation {
                 e.printStackTrace();
             }
 
-            ArrayList<Places> arrayList = new ArrayList<Places>();
+            for(int i=0;i<array.length();i++){
+                try {
+                    Log.d("Array results ", String.valueOf(array.get(i)));
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
+
             for (int i = 0; i < array.length(); i++) {
                 try {
+                    Log.d("Hereee " , String.valueOf((JSONObject) array.get(i)));
                     Places places = Places.jsonToPontoReferencia((JSONObject) array.get(i));
                     Log.v("Places Services ", "" + places);
                     arrayList.add(places);
@@ -123,27 +130,31 @@ public class GetNearByLocation {
                 }
             }
 
-            for (int i = 0; i < arrayList.size(); i++) {
-                mGoogleMap.addMarker(new MarkerOptions()
-                        .title(arrayList.get(i).getName())
-                        .position(
-                                new LatLng(arrayList.get(i).getLatitude(), arrayList
-                                        .get(i).getLongitude()))
-                        .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_GREEN))
-                        .snippet(arrayList.get(i).getVicinity()));
+            if(!arrayList.isEmpty()){
+                for (int i = 0; i < arrayList.size(); i++) {
+                    if(arrayList.get(i).getName() != ""){
+                        mGoogleMap.addMarker(new MarkerOptions()
+                                .title(arrayList.get(i).getName())
+                                .position(
+                                        new LatLng(arrayList.get(i).getLatitude(), arrayList
+                                                .get(i).getLongitude()))
+                                .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_GREEN))
+                                .snippet(arrayList.get(i).getVicinity()));
+                    }
+                }
+                CameraPosition cameraPosition = new CameraPosition.Builder()
+                        .target(new LatLng(arrayList.get(0).getLatitude(), arrayList
+                                .get(0).getLongitude())) // Sets the center of the map to
+                        // Mountain View
+                        .zoom(16) // Sets the zoom
+                        .tilt(30) // Sets the tilt of the camera to 30 degrees
+                        .build(); // Creates a CameraPosition from the builder
+                mGoogleMap.animateCamera(CameraUpdateFactory
+                        .newCameraPosition(cameraPosition));
             }
-            CameraPosition cameraPosition = new CameraPosition.Builder()
-                    .target(new LatLng(arrayList.get(0).getLatitude(), arrayList
-                            .get(0).getLongitude())) // Sets the center of the map to
-                    // Mountain View
-                    .zoom(16) // Sets the zoom
-                    .tilt(30) // Sets the tilt of the camera to 30 degrees
-                    .build(); // Creates a CameraPosition from the builder
-            mGoogleMap.animateCamera(CameraUpdateFactory
-                    .newCameraPosition(cameraPosition));
-        }
 
-            //return arrayList;
+
+        }
 
         }
 

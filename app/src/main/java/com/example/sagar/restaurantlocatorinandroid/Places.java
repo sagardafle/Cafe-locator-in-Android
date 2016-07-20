@@ -1,5 +1,7 @@
 package com.example.sagar.restaurantlocatorinandroid;
 
+import android.util.Log;
+
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -79,6 +81,7 @@ public class Places {
 
     public  static Places jsonToPontoReferencia(JSONObject pontoReferencia) {
         try {
+            Log.d("jsonToPontoReferencia", pontoReferencia.toString());
             Places result = new Places();
             JSONObject geometry = (JSONObject) pontoReferencia.get("geometry");
             JSONObject location = (JSONObject) geometry.get("location");
@@ -88,7 +91,16 @@ public class Places {
             result.setName(pontoReferencia.getString("name"));
             result.setVicinity(pontoReferencia.getString("vicinity"));
             result.setId(pontoReferencia.getString("id"));
-           // result.setRating(pontoReferencia.getString("rating"));
+
+            if (pontoReferencia.has("rating")) {
+                Log.d("Ratings value!!!" , String.valueOf( pontoReferencia.get("rating")));
+                result.setRating(Float.valueOf(String.valueOf(pontoReferencia.get("rating"))));
+            }
+            else {
+                result.setRating(new Float(0.0));
+            }
+
+
             return result;
         } catch (JSONException ex) {
             Logger.getLogger(Places.class.getName()).log(Level.SEVERE, null, ex);
@@ -98,7 +110,7 @@ public class Places {
 
     @Override
     public String toString() {
-        return "Place{" + "id=" + id + ", icon=" + icon + ", name=" + name + ", latitude=" + latitude + ", longitude=" + longitude + '}';
+        return "Place{" + "id=" + id + ", icon=" + icon + ", name=" + name + ", latitude=" + latitude + ", longitude=" + longitude +  ", rating=" + rating+ '}';
     }
 }
 

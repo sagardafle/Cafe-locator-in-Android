@@ -41,6 +41,7 @@ import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 
 public class TabFragmentOne extends Fragment implements
@@ -134,11 +135,20 @@ public class TabFragmentOne extends Fragment implements
         Geocoder mygeocoder = new Geocoder(this.getContext());
         List<android.location.Address> gclist;
         gclist = mygeocoder.getFromLocationName(inputaddress, 1);
-        Address add = gclist.get(0);
-        String locality = add.getLocality();
-        double latitude = add.getLatitude();
-        double longitude = add.getLongitude();
-        gotoLocation(latitude, longitude, DEFAULTZOOM);
+        Log.d("gclist", String.valueOf(gclist));
+        if(gclist.size() !=0){
+            Address add = gclist.get(0);
+            String locality = add.getLocality();
+            double latitude = add.getLatitude();
+            double longitude = add.getLongitude();
+            Log.d("Dest1 lat", String.valueOf(latitude));
+            Log.d("Dest1 lng", String.valueOf(longitude));
+            gotoLocation(latitude, longitude, DEFAULTZOOM);
+        }
+        else{
+            Toast.makeText(getContext(),"Address does not exists" , Toast.LENGTH_LONG);
+        }
+
     }
 
     private void gotoLocation(double latitude, double longitude, float zoom) {
@@ -149,12 +159,25 @@ public class TabFragmentOne extends Fragment implements
         mGoogleMap.moveCamera(update);
         MarkerOptions markerOptions = new MarkerOptions();
         markerOptions.position(ll);
-        markerOptions.title("Restaurant");
+        markerOptions.title("Searched Restaurant");
         markerOptions.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_RED));
         mCurrLocationMarker = mGoogleMap.addMarker(markerOptions);
 
+        /**
+         * Call to google Place API to get the nearby locations
+         */
         GetNearByLocation nearbylocation = new GetNearByLocation(mGoogleMap, latitude, longitude);
         nearbylocation.findnearbyCafes();
+       ArrayList<com.example.sagar.restaurantlocatorinandroid.Places> listofrestaurants = new ArrayList<com.example.sagar.restaurantlocatorinandroid.Places>();
+        listofrestaurants = nearbylocation.arrayList;
+        for (int i = 0; i<listofrestaurants.size(); i++){
+            Log.i("Member name: ", String.valueOf(listofrestaurants.get(i)));
+        }
+        TabFragmentTwo tft = new TabFragmentTwo();
+        Bundle args = new Bundle();
+        args.putString("YourKey",String.valueOf(listofrestaurants));
+        tft.setArguments(args);
+
     }
 
 
@@ -225,6 +248,8 @@ public class TabFragmentOne extends Fragment implements
         //move map camera
         mGoogleMap.moveCamera(CameraUpdateFactory.newLatLng(latLng));
         mGoogleMap.animateCamera(CameraUpdateFactory.zoomTo(11));
+
+        mGoogleMap.setMapType(GoogleMap.MAP_TYPE_NORMAL); //set the view to normal mode
 
         //stop location updates
         if (mGoogleApiClient != null) {

@@ -73,7 +73,6 @@ public class MapsActivity extends AppCompatActivity {
         ViewPagerAdapter adapter = new ViewPagerAdapter(getSupportFragmentManager());
         adapter.addFragment(TabFragmentOne.newInstance("this data is for fragment 1"), "One");
         adapter.addFragment(TabFragmentTwo.newInstance("this data is for fragment 2"), "Two");
-//        adapter.addFragment(TabFragmentThree.newInstance("this data is for fragment 3"), "Three");
         viewPager.setAdapter(adapter);
     }
 //        @Override

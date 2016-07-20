@@ -39,6 +39,12 @@ public class TabFragmentTwo extends Fragment {
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        String value = getArguments().getString("YourKey");
+        if(value != null){
+            Log.d("Received Fragment Data" ,value);
+        }else{
+            Log.d("Received Fragment Data" ,"is empty");
+        }
 
         return inflater.inflate(R.layout.fragment_two, container, false);
 
