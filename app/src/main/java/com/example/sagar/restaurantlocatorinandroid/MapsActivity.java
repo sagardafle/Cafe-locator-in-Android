@@ -13,6 +13,8 @@ import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.Marker;
 
+import java.util.ArrayList;
+
 public class MapsActivity extends AppCompatActivity {
 
     GoogleMap mGoogleMap;
@@ -24,6 +26,7 @@ public class MapsActivity extends AppCompatActivity {
     private static final String TAG = "MapsActivity";
     private ViewPager viewPager;
     private TabLayout tabLayout;
+    static ViewPagerAdapter adapter;
     private int[] tabIcons = {R.drawable.ic_menu_map,R.drawable.ic_menu_list};
 
     @Override
@@ -41,38 +44,13 @@ public class MapsActivity extends AppCompatActivity {
 
         tabLayout.getTabAt(0).setIcon(tabIcons[0]);
         tabLayout.getTabAt(1).setIcon(tabIcons[1]);
-//        tabLayout.getTabAt(2).setIcon(tabIcons[2]);
-
-//        PlaceAutocompleteFragment autocompleteFragment = (PlaceAutocompleteFragment)
-//                getFragmentManager().findFragmentById(R.id.place_autocomplete_fragment);
-//
-//        autocompleteFragment.setOnPlaceSelectedListener(new PlaceSelectionListener() {
-//            @Override
-//            public void onPlaceSelected(Place place) {
-//                // TODO: Get info about the selected place.
-//                Log.i(TAG, "Place: " + place.getName());
-//            }
-//
-//            @Override
-//            public void onError(Status status) {
-//                // TODO: Handle the error.
-//                Log.i(TAG, "An error occurred: " + status);
-//            }
-//        });
-//
-//        if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-//            checkLocationPermission();
-//        }
-//
-//        mapFrag = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map);
-//        mapFrag.getMapAsync(this);
     }
 
     private void setupViewPager(ViewPager viewPager) {
 
-        ViewPagerAdapter adapter = new ViewPagerAdapter(getSupportFragmentManager());
+        adapter = new ViewPagerAdapter(getSupportFragmentManager());
         adapter.addFragment(TabFragmentOne.newInstance("this data is for fragment 1"), "One");
-        adapter.addFragment(TabFragmentTwo.newInstance("this data is for fragment 2"), "Two");
+        adapter.addFragment(TabFragmentTwo.newInstance(new ArrayList<Places>()), "Two");
         viewPager.setAdapter(adapter);
     }
 //        @Override

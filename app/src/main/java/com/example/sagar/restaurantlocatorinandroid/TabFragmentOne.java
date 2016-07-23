@@ -41,7 +41,6 @@ import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.List;
 
 public class TabFragmentOne extends Fragment implements
@@ -61,6 +60,7 @@ public class TabFragmentOne extends Fragment implements
     Location mLastLocation;
     Marker mCurrLocationMarker;
     private static final String TAG = "MapsActivity";
+   // static Bundle bundle;
 
     public TabFragmentOne() {
 
@@ -83,6 +83,7 @@ public class TabFragmentOne extends Fragment implements
         if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             checkLocationPermission();
         }
+
     }
 
     @Nullable
@@ -152,6 +153,7 @@ public class TabFragmentOne extends Fragment implements
     }
 
     private void gotoLocation(double latitude, double longitude, float zoom) {
+        Log.d("inside ", " gotoLocation");
         LatLng ll = new LatLng(latitude, longitude);
         Log.d("Dest lat", String.valueOf(latitude));
         Log.d("Dest lng", String.valueOf(longitude));
@@ -168,15 +170,6 @@ public class TabFragmentOne extends Fragment implements
          */
         GetNearByLocation nearbylocation = new GetNearByLocation(mGoogleMap, latitude, longitude);
         nearbylocation.findnearbyCafes();
-       ArrayList<com.example.sagar.restaurantlocatorinandroid.Places> listofrestaurants = new ArrayList<com.example.sagar.restaurantlocatorinandroid.Places>();
-        listofrestaurants = nearbylocation.arrayList;
-        for (int i = 0; i<listofrestaurants.size(); i++){
-            Log.i("Member name: ", String.valueOf(listofrestaurants.get(i)));
-        }
-        TabFragmentTwo tft = new TabFragmentTwo();
-        Bundle args = new Bundle();
-        args.putString("YourKey",String.valueOf(listofrestaurants));
-        tft.setArguments(args);
 
     }
 

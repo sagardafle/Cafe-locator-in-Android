@@ -35,7 +35,8 @@ public class GetNearByLocation {
     private static final String API_KEY = "&key=AIzaSyAUOx1zt79BHU9g0uFA00OydezvAd3UU1Q";
 
     GoogleMap mGoogleMap;
-    static ArrayList<Places> arrayList = new ArrayList<Places>();
+    //type places aayega kar tu hi
+    static ArrayList<Places> arrayList = new ArrayList<>();
     double destlatitude, destlongitude;
 
     public GetNearByLocation(GoogleMap mGoogleMap, double destlatitude, double destlongitude) {
@@ -84,7 +85,7 @@ public class GetNearByLocation {
                 while ((line = bufferedReader.readLine()) != null) {
                     content.append(line + "\n");
                 }
-                Log.d("CONTENT!!", content.toString());
+                //Log.d("CONTENT!!", content.toString());
                 bufferedReader.close();
             } catch (Exception e) {
                 e.printStackTrace();
@@ -151,6 +152,12 @@ public class GetNearByLocation {
                         .build(); // Creates a CameraPosition from the builder
                 mGoogleMap.animateCamera(CameraUpdateFactory
                         .newCameraPosition(cameraPosition));
+
+
+            MapsActivity.adapter.removeFragment();
+                MapsActivity.adapter.addFragment(TabFragmentTwo.newInstance(arrayList),"Section 2");
+                MapsActivity.adapter.notifyDataSetChanged();
+                //MapsActivity.adapter.getItem(1);
             }
 
 

@@ -3,6 +3,7 @@ package com.example.sagar.restaurantlocatorinandroid;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
+import android.util.Log;
 
 import java.util.ArrayList;
 
@@ -19,16 +20,34 @@ public class ViewPagerAdapter extends FragmentPagerAdapter {
     }
 
     @Override public Fragment getItem(int position) {
-        return mFragmentList.get(position);
+        if(position==0){
+            Log.d("checking","fragment 0 is getting called");
+            return mFragmentList.get(position);
+        }
+        else{
+            if(GetNearByLocation.arrayList!=null && GetNearByLocation.arrayList.size()!=0 ){
+                Log.d("checking","fragment 1 is getting created with list");
+                return TabFragmentTwo.newInstance(GetNearByLocation.arrayList);
+            }
+            else{
+                Log.d("checking","fragment 1 is getting created with blank");
+                return TabFragmentTwo.newInstance(new ArrayList<Places>());
+            }
+        }
+
     }
 
     @Override public int getCount() {
-        return mFragmentList.size();
+        return 2;
     }
 
     public void addFragment(Fragment fragment, String title){
         mFragmentList.add(fragment);
         mFragmentListTitles.add(title);
+    }
+
+    public void removeFragment(){
+        mFragmentList.remove(1);
     }
 
     @Override public CharSequence getPageTitle(int position) {

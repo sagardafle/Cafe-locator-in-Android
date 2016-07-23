@@ -5,6 +5,7 @@ import android.util.Log;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.Serializable;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -12,7 +13,7 @@ import java.util.logging.Logger;
  * Created by Sagar on 7/18/2016.
  */
 
-public class Places {
+public class Places implements Serializable{
     private String id;
 
     private String icon;
