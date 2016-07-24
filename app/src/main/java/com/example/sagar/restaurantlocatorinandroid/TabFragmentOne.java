@@ -5,12 +5,15 @@ package com.example.sagar.restaurantlocatorinandroid;
  */
 
 import android.content.pm.PackageManager;
+import android.graphics.Color;
 import android.location.Address;
 import android.location.Geocoder;
 import android.location.Location;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.design.widget.CoordinatorLayout;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
@@ -53,6 +56,7 @@ public class TabFragmentOne extends Fragment implements
     private static final String ARG_EXAMPLE = "this_is_a_constant";
     private static final float DEFAULTZOOM = 16.0f;
     private String example_data;
+    private CoordinatorLayout coordinatorLayout;
     GoogleMap mGoogleMap;
     static double destination_latitude;
     static double destination_longitude;
@@ -62,7 +66,7 @@ public class TabFragmentOne extends Fragment implements
     Location mLastLocation;
     Marker mCurrLocationMarker;
     private static final String TAG = "MapsActivity";
-   // static Bundle bundle;
+    // static Bundle bundle;
 
     public TabFragmentOne() {
 
@@ -86,6 +90,14 @@ public class TabFragmentOne extends Fragment implements
             checkLocationPermission();
         }
 
+    }
+
+    @Override
+    public void onActivityCreated(Bundle savedInstanceState) {
+        coordinatorLayout = (CoordinatorLayout) getActivity().findViewById(R.id
+                .coordinatorLayout);
+        super.onActivityCreated(savedInstanceState);
+        Snackbar.make(getView(), "Welcome Message", Snackbar.LENGTH_LONG).show();
     }
 
     @Nullable
@@ -139,7 +151,7 @@ public class TabFragmentOne extends Fragment implements
         List<android.location.Address> gclist;
         gclist = mygeocoder.getFromLocationName(inputaddress, 1);
         Log.d("gclist", String.valueOf(gclist));
-        if(gclist.size() !=0){
+        if (gclist.size() != 0) {
             Address add = gclist.get(0);
             String locality = add.getLocality();
             destination_latitude = add.getLatitude();
@@ -147,9 +159,24 @@ public class TabFragmentOne extends Fragment implements
             Log.d("Dest1 lat", String.valueOf(destination_latitude));
             Log.d("Dest1 lng", String.valueOf(destination_longitude));
             gotoLocation(destination_latitude, destination_longitude, DEFAULTZOOM);
-        }
-        else{
-            Toast.makeText(getContext(),"Address does not exists" , Toast.LENGTH_LONG);
+        } else {
+            if (ActivityCompat.checkSelfPermission(this.getActivity(), android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this.getActivity(), android.Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+                // TODO: Consider calling
+                //    ActivityCompat#requestPermissions
+                // here to request the missing permissions, and then overriding
+                //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
+                //                                          int[] grantResults)
+                // to handle the case where the user grants the permission. See the documentation
+                // for ActivityCompat#requestPermissions for more details.
+                return;
+            }
+
+            Snackbar snackbar = Snackbar.make(getView(), "No nearby restaurants found here",
+                    Snackbar.LENGTH_LONG);
+            View snackBarView = snackbar.getView();
+            snackBarView.setBackgroundColor(Color.parseColor("#cc0000"));
+            snackbar.show();
+
         }
 
     }

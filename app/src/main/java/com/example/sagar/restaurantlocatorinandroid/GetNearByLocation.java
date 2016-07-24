@@ -112,6 +112,13 @@ public class GetNearByLocation {
                 e.printStackTrace();
             }
 
+        if(!arrayList.isEmpty() && arrayList.size()>0){
+            Log.d("Clearing the list" , arrayList.toString());
+            arrayList.clear();
+
+        }
+
+        Log.d("ArrayL b4 add  places",arrayList.toString());
 
 
             for (int i = 0; i < array.length(); i++) {

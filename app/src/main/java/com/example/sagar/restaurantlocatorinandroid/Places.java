@@ -101,8 +101,14 @@ public class Places implements Serializable,Comparable{
             result.setIcon(pontoReferencia.getString("icon"));
             result.setName(pontoReferencia.getString("name"));
             result.setVicinity(pontoReferencia.getString("vicinity"));
-            result.setId(pontoReferencia.getString("id"));
-            result.setPhotoreference(pontoReferencia.getString("reference"));
+
+            if(pontoReferencia.has("id")) {
+                result.setPhotoreference(pontoReferencia.getString("id"));
+            }
+
+            if(pontoReferencia.has("reference")) {
+                result.setPhotoreference(pontoReferencia.getString("reference"));
+            }
 
             if (pontoReferencia.has("rating")) {
                 Log.d("Ratings value!!!" , String.valueOf( pontoReferencia.get("rating")));

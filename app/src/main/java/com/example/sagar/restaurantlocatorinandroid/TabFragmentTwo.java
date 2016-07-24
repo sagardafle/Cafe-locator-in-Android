@@ -72,6 +72,7 @@ public class TabFragmentTwo extends Fragment {
     }
     public void updateUI() {
         Log.d("Inside*************** ", " updateUI");
+
             mAdapter = new RestaurantAdapter(getContext(),mPlacesList);
             Log.d("Adapter class " , mAdapter.toString());
             recyclerView.setAdapter(mAdapter);
