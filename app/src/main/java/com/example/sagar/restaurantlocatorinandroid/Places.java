@@ -13,7 +13,7 @@ import java.util.logging.Logger;
  * Created by Sagar on 7/18/2016.
  */
 
-public class Places implements Serializable{
+public class Places implements Serializable,Comparable{
     private String id;
 
     private String icon;
@@ -109,9 +109,18 @@ public class Places implements Serializable{
         return null;
     }
 
+
+
     @Override
     public String toString() {
         return "Place{" + "id=" + id + ", icon=" + icon + ", name=" + name + ", latitude=" + latitude + ", longitude=" + longitude +  ", rating=" + rating+ '}';
+    }
+
+
+    @Override
+    public int compareTo(Object RestaurantList) {
+        Places obj = (Places) RestaurantList;
+        return obj.getRating().compareTo(this.getRating());
     }
 }
 

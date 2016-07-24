@@ -25,16 +25,18 @@ public class ViewPagerAdapter extends FragmentPagerAdapter {
             return mFragmentList.get(position);
         }
         else{
-            if(GetNearByLocation.arrayList!=null && GetNearByLocation.arrayList.size()!=0 ){
+            Log.d("checking","inside else");
+/*            if(GetNearByLocation.arrayList!=null && GetNearByLocation.arrayList.size()!=0 ){*/
                 Log.d("checking","fragment 1 is getting created with list");
-                return TabFragmentTwo.newInstance(GetNearByLocation.arrayList);
-            }
+                TabFragmentTwo tabFragmentTwo = TabFragmentTwo.newInstance(GetNearByLocation.arrayList);
+              //  tabFragmentTwo.updateUI();
+                return tabFragmentTwo;
+           /* }
             else{
                 Log.d("checking","fragment 1 is getting created with blank");
                 return TabFragmentTwo.newInstance(new ArrayList<Places>());
-            }
+            }*/
         }
-
     }
 
     @Override public int getCount() {

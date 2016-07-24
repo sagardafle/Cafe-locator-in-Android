@@ -16,7 +16,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import java.util.List;
+import java.util.ArrayList;
+import java.util.Collections;
 
 public class TabFragmentTwo extends Fragment {
 
@@ -24,12 +25,12 @@ public class TabFragmentTwo extends Fragment {
     private String example_data;
     private static RestaurantAdapter mAdapter;
     private static RecyclerView recyclerView;
-    private static List<Places> mPlacesList;
+    private static ArrayList<Places> mPlacesList;
     public TabFragmentTwo() {
 
     }
 
-    public static TabFragmentTwo newInstance(List<Places> restaurantList) {
+    public static TabFragmentTwo newInstance(ArrayList<Places> restaurantList) {
         Log.d("checking","fragment is getting called "+restaurantList.size());
         TabFragmentTwo fragment = new TabFragmentTwo();
         mPlacesList = restaurantList;
@@ -37,11 +38,7 @@ public class TabFragmentTwo extends Fragment {
             Log.d("checking",places.toString());
         }
 
-        //updateUI();
-
-
-
-
+        Collections.sort(restaurantList);
 
         return fragment;
     }
@@ -49,9 +46,6 @@ public class TabFragmentTwo extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-      //  example_data = getArguments().getString(ARG_EXAMPLE);
-
-
     }
 
     @Nullable
@@ -70,17 +64,17 @@ public class TabFragmentTwo extends Fragment {
         super.onResume();
         updateUI();
     }
-    private void updateUI() {
+    public void updateUI() {
         Log.d("Inside*************** ", " updateUI");
-        if (mAdapter == null) {
+       /* if (mAdapter == null) {*/
             mAdapter = new RestaurantAdapter(mPlacesList);
             Log.d("Adapter class " , mAdapter.toString());
             recyclerView.setAdapter(mAdapter);
             recyclerView.setItemAnimator(new DefaultItemAnimator());
-        } else {
+        /*} else {
             Log.d("Else Adapter class " , mAdapter.toString());
             mAdapter.notifyDataSetChanged();
-        }
+        }*/
     }
 
     private static class RestaurantListHolder extends RecyclerView.ViewHolder
@@ -121,14 +115,14 @@ public class TabFragmentTwo extends Fragment {
 
 
     private class RestaurantAdapter extends RecyclerView.Adapter<RestaurantListHolder> {
-        private List<Places> mRestaurantLists;
+        private ArrayList<Places> mRestaurantLists;
         private RestaurantAdapter mRestaurantAdapterobj ;
 
         //static RestaurantAdapter instance;
 
 
 
-        public RestaurantAdapter(List<Places> restaurants) {
+        public RestaurantAdapter(ArrayList<Places> restaurants) {
             mRestaurantLists = restaurants;
 
         }

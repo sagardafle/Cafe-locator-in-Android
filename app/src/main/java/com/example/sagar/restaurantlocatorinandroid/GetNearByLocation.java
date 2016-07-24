@@ -97,7 +97,7 @@ public class GetNearByLocation {
         @Override
         protected void onPostExecute(String str) {
 
-            Log.d("Final++++", str);
+            //Log.d("Final++++", str);
             super.onPostExecute(str);
           //  parseJSON(str);
             JSONObject object = null;
@@ -113,13 +113,7 @@ public class GetNearByLocation {
                 e.printStackTrace();
             }
 
-            for(int i=0;i<array.length();i++){
-                try {
-                    Log.d("Array results ", String.valueOf(array.get(i)));
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
-            }
+
 
             for (int i = 0; i < array.length(); i++) {
                 try {
