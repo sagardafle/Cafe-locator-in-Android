@@ -4,6 +4,7 @@ package com.example.sagar.restaurantlocatorinandroid;
  * Created by Sagar on 7/18/2016.
  */
 
+import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -14,15 +15,20 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import java.util.ArrayList;
 import java.util.Collections;
 
+
 public class TabFragmentTwo extends Fragment {
 
     private static final String ARG_EXAMPLE = "this_is_a_constant";
     private String example_data;
+    private static final String API_KEY = "AIzaSyAUOx1zt79BHU9g0uFA00OydezvAd3UU1Q";
+
+    private static Context mContext;
     private static RestaurantAdapter mAdapter;
     private static RecyclerView recyclerView;
     private static ArrayList<Places> mPlacesList;
@@ -66,22 +72,17 @@ public class TabFragmentTwo extends Fragment {
     }
     public void updateUI() {
         Log.d("Inside*************** ", " updateUI");
-       /* if (mAdapter == null) {*/
-            mAdapter = new RestaurantAdapter(mPlacesList);
+            mAdapter = new RestaurantAdapter(getContext(),mPlacesList);
             Log.d("Adapter class " , mAdapter.toString());
             recyclerView.setAdapter(mAdapter);
             recyclerView.setItemAnimator(new DefaultItemAnimator());
-        /*} else {
-            Log.d("Else Adapter class " , mAdapter.toString());
-            mAdapter.notifyDataSetChanged();
-        }*/
     }
 
     private static class RestaurantListHolder extends RecyclerView.ViewHolder
             implements View.OnClickListener {
 
         private TextView mNameTextView;
-
+        private ImageView mImageViewIcon;
         private Places mPlaces;
 
         public RestaurantListHolder(View itemView) {
@@ -89,13 +90,29 @@ public class TabFragmentTwo extends Fragment {
             itemView.setOnClickListener(this);
 
             mNameTextView = (TextView) itemView.findViewById(R.id.nameTextView);
-
+            mImageViewIcon = (ImageView)  itemView.findViewById(R.id.imageViewHolder);
         }
 
-        public void bindExpense(Places places) {
+        public void bindRestaurants(Places places) {
             mPlaces = places;
             mNameTextView.setText(mPlaces.getName());
 
+            String url = mPlaces.getIcon();
+            String photoreference = mPlaces.getPhotoreference();
+            String restaurantpic = "http://maps.googleapis.com/maps/api/place/photo?" +
+                    "maxwidth=400" +
+                    "&photoreference=" +photoreference +
+                    "&key="+API_KEY;
+
+        Log.d("Loading restaurantpic" , restaurantpic);
+
+//            Glide
+//                    .with(mContext)
+//                    .load(restaurantpic)
+//                    .centerCrop()
+//                   // .placeholder(R.drawable.loading_spinner)
+//                    //.crossFade()
+//                    .into(mImageViewIcon);
         }
 
         /**
@@ -116,13 +133,10 @@ public class TabFragmentTwo extends Fragment {
 
     private class RestaurantAdapter extends RecyclerView.Adapter<RestaurantListHolder> {
         private ArrayList<Places> mRestaurantLists;
-        private RestaurantAdapter mRestaurantAdapterobj ;
-
-        //static RestaurantAdapter instance;
 
 
-
-        public RestaurantAdapter(ArrayList<Places> restaurants) {
+        public RestaurantAdapter(Context context,ArrayList<Places> restaurants) {
+            mContext = context;
             mRestaurantLists = restaurants;
 
         }
@@ -137,7 +151,7 @@ public class TabFragmentTwo extends Fragment {
         @Override
         public void onBindViewHolder(RestaurantListHolder holder, int position) {
             Places restaurants = mRestaurantLists.get(position);
-            holder.bindExpense(restaurants);
+            holder.bindRestaurants(restaurants);
         }
 
         @Override

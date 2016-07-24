@@ -54,6 +54,8 @@ public class TabFragmentOne extends Fragment implements
     private static final float DEFAULTZOOM = 16.0f;
     private String example_data;
     GoogleMap mGoogleMap;
+    static double destination_latitude;
+    static double destination_longitude;
     SupportMapFragment mapFrag;
     LocationRequest mLocationRequest;
     GoogleApiClient mGoogleApiClient;
@@ -140,11 +142,11 @@ public class TabFragmentOne extends Fragment implements
         if(gclist.size() !=0){
             Address add = gclist.get(0);
             String locality = add.getLocality();
-            double latitude = add.getLatitude();
-            double longitude = add.getLongitude();
-            Log.d("Dest1 lat", String.valueOf(latitude));
-            Log.d("Dest1 lng", String.valueOf(longitude));
-            gotoLocation(latitude, longitude, DEFAULTZOOM);
+            destination_latitude = add.getLatitude();
+            destination_longitude = add.getLongitude();
+            Log.d("Dest1 lat", String.valueOf(destination_latitude));
+            Log.d("Dest1 lng", String.valueOf(destination_longitude));
+            gotoLocation(destination_latitude, destination_longitude, DEFAULTZOOM);
         }
         else{
             Toast.makeText(getContext(),"Address does not exists" , Toast.LENGTH_LONG);

@@ -35,7 +35,6 @@ public class GetNearByLocation {
     private static final String API_KEY = "&key=AIzaSyAUOx1zt79BHU9g0uFA00OydezvAd3UU1Q";
 
     GoogleMap mGoogleMap;
-    //type places aayega kar tu hi
     static ArrayList<Places> arrayList = new ArrayList<>();
     double destlatitude, destlongitude;
 
@@ -117,17 +116,18 @@ public class GetNearByLocation {
 
             for (int i = 0; i < array.length(); i++) {
                 try {
-                    Log.d("Hereee " , String.valueOf((JSONObject) array.get(i)));
                     Places places = Places.jsonToPontoReferencia((JSONObject) array.get(i));
-                    Log.v("Places Services ", "" + places);
                     arrayList.add(places);
                 } catch (Exception e) {
                 }
             }
 
+            Log.d("Arraylist  printing",arrayList.toString());
+            Log.d("Arraylist  size",String.valueOf(arrayList.size()));
             if(!arrayList.isEmpty()){
+
                 for (int i = 0; i < arrayList.size(); i++) {
-                    if(arrayList.get(i).getName() != ""){
+                    if((arrayList.get(i).getName() != "") && (arrayList.get(i).getLatitude()!= TabFragmentOne.destination_latitude) && (arrayList.get(i).getLatitude()!= TabFragmentOne.destination_longitude)){
                         mGoogleMap.addMarker(new MarkerOptions()
                                 .title(arrayList.get(i).getName())
                                 .position(
@@ -135,23 +135,42 @@ public class GetNearByLocation {
                                                 .get(i).getLongitude()))
                                 .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_GREEN))
                                 .snippet(arrayList.get(i).getVicinity()));
+                    } else {
+                        //Searchhed restaurant
+                        mGoogleMap.addMarker(new MarkerOptions()
+                                .title(arrayList.get(i).getName())
+                                .position(
+                                        new LatLng(arrayList.get(i).getLatitude(), arrayList
+                                                .get(i).getLongitude()))
+                                .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_RED))
+                                .snippet(arrayList.get(i).getVicinity()));
                     }
                 }
+
+                Log.d("Arraylist camera size" , String.valueOf(arrayList.size()));
+                //Log.d("Moving camera to^^^^^^^", ));
+
+
                 CameraPosition cameraPosition = new CameraPosition.Builder()
-                        .target(new LatLng(arrayList.get(0).getLatitude(), arrayList
-                                .get(0).getLongitude())) // Sets the center of the map to
-                        // Mountain View
+                        .target(
+                                new LatLng(
+                                        TabFragmentOne.destination_latitude,
+                                        TabFragmentOne.destination_longitude
+                                    )
+                                 ) // Sets the center of the map to
                         .zoom(16) // Sets the zoom
                         .tilt(30) // Sets the tilt of the camera to 30 degrees
                         .build(); // Creates a CameraPosition from the builder
                 mGoogleMap.animateCamera(CameraUpdateFactory
                         .newCameraPosition(cameraPosition));
+               // arrayList.clear();
 
 
             MapsActivity.adapter.removeFragment();
                 MapsActivity.adapter.addFragment(TabFragmentTwo.newInstance(arrayList),"Section 2");
                 MapsActivity.adapter.notifyDataSetChanged();
                 //MapsActivity.adapter.getItem(1);
+
             }
 
 

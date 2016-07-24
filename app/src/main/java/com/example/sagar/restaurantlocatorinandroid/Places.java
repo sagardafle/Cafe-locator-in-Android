@@ -23,6 +23,16 @@ public class Places implements Serializable,Comparable{
     private Double longitude;
     private Float rating;
 
+    public String getPhotoreference() {
+        return photoreference;
+    }
+
+    public void setPhotoreference(String photoreference) {
+        this.photoreference = photoreference;
+    }
+
+    private String photoreference;
+
     public Float getRating() {
         return rating;
     }
@@ -92,6 +102,7 @@ public class Places implements Serializable,Comparable{
             result.setName(pontoReferencia.getString("name"));
             result.setVicinity(pontoReferencia.getString("vicinity"));
             result.setId(pontoReferencia.getString("id"));
+            result.setPhotoreference(pontoReferencia.getString("reference"));
 
             if (pontoReferencia.has("rating")) {
                 Log.d("Ratings value!!!" , String.valueOf( pontoReferencia.get("rating")));
@@ -113,7 +124,7 @@ public class Places implements Serializable,Comparable{
 
     @Override
     public String toString() {
-        return "Place{" + "id=" + id + ", icon=" + icon + ", name=" + name + ", latitude=" + latitude + ", longitude=" + longitude +  ", rating=" + rating+ '}';
+        return "Place{" + "id=" + id + ", icon=" + icon + ", name=" + name + ", latitude=" + latitude + ", longitude=" + longitude +  ", rating=" + rating+  ", photoreference=" +photoreference +'}';
     }
 
 
