@@ -16,7 +16,10 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.RatingBar;
 import android.widget.TextView;
+
+import com.bumptech.glide.Glide;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -59,7 +62,11 @@ public class TabFragmentTwo extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         final View view = inflater.inflate(R.layout.fragment_two,container,false);
         recyclerView = (RecyclerView) view.findViewById(R.id.expense_recycler_view);
+        recyclerView.addItemDecoration(new DividerItemDecoration(getActivity(), DividerItemDecoration.VERTICAL_LIST));
+        recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
+        recyclerView.setItemAnimator(new DefaultItemAnimator());
+
         updateUI();
         return view;
 
@@ -84,6 +91,8 @@ public class TabFragmentTwo extends Fragment {
 
         private TextView mNameTextView;
         private ImageView mImageViewIcon;
+        private RatingBar mRatingsView;
+
         private Places mPlaces;
 
         public RestaurantListHolder(View itemView) {
@@ -92,11 +101,16 @@ public class TabFragmentTwo extends Fragment {
 
             mNameTextView = (TextView) itemView.findViewById(R.id.nameTextView);
             mImageViewIcon = (ImageView)  itemView.findViewById(R.id.imageViewHolder);
+            mRatingsView = (RatingBar) itemView.findViewById(R.id.listrating);
         }
 
         public void bindRestaurants(Places places) {
             mPlaces = places;
             mNameTextView.setText(mPlaces.getName());
+            float ratingvalue = (Float) mPlaces.getRating();
+            mRatingsView.setRating(ratingvalue);
+
+
 
             String url = mPlaces.getIcon();
             String photoreference = mPlaces.getPhotoreference();
@@ -107,13 +121,13 @@ public class TabFragmentTwo extends Fragment {
 
         Log.d("Loading restaurantpic" , restaurantpic);
 
-//            Glide
-//                    .with(mContext)
-//                    .load(restaurantpic)
-//                    .centerCrop()
-//                   // .placeholder(R.drawable.loading_spinner)
-//                    //.crossFade()
-//                    .into(mImageViewIcon);
+            Glide
+                    .with(mContext)
+                    .load("https://i.ytimg.com/vi/QItqbV9xSBo/hqdefault.jpg")
+                    .centerCrop()
+                   // .placeholder(R.drawable.loading_spinner)
+                    //.crossFade()
+                    .into(mImageViewIcon);
         }
 
         /**

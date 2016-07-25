@@ -45,6 +45,8 @@ public class GetNearByLocation {
     }
 
     public void findnearbyCafes() {
+
+
         ArrayList resultList = null;
 
         HttpURLConnection conn = null;

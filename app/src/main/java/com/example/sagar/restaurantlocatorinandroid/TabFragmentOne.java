@@ -4,11 +4,16 @@ package com.example.sagar.restaurantlocatorinandroid;
  * Created by Sagar on 7/18/2016.
  */
 
+import android.content.Context;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.location.Address;
 import android.location.Geocoder;
 import android.location.Location;
+import android.location.LocationManager;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -65,6 +70,7 @@ public class TabFragmentOne extends Fragment implements
     GoogleApiClient mGoogleApiClient;
     Location mLastLocation;
     Marker mCurrLocationMarker;
+    static View myinflater;
     private static final String TAG = "MapsActivity";
     // static Bundle bundle;
 
@@ -92,22 +98,73 @@ public class TabFragmentOne extends Fragment implements
 
     }
 
-    @Override
-    public void onActivityCreated(Bundle savedInstanceState) {
-        coordinatorLayout = (CoordinatorLayout) getActivity().findViewById(R.id
-                .coordinatorLayout);
-        super.onActivityCreated(savedInstanceState);
-        Snackbar.make(getView(), "Welcome Message", Snackbar.LENGTH_LONG).show();
-    }
 
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
 
-        View myinflater = inflater.inflate(R.layout.fragment_one, container, false);
+        myinflater = inflater.inflate(R.layout.fragment_one, container, false);
         mGoogleMap = ((MapFragment) getActivity().getFragmentManager()
                 .findFragmentById(R.id.map)).getMap();
+
+
+        final CoordinatorLayout coordinatorLayout = (CoordinatorLayout) myinflater.findViewById(R.id
+                .coordinatorLayout);
+        /**
+         * Check if mobile or wifi is connected
+         */
+        if (!isNetworkConnected()) {
+            Snackbar internetconnectivitysnackbar = Snackbar.make
+                    (
+                            coordinatorLayout,
+                            "No internet connectivity",
+                            Snackbar.LENGTH_LONG
+                    )
+                    .setDuration(6000)
+                    .setAction("Enable", new View.OnClickListener() {
+
+                        @Override
+                        public void onClick(View v) {
+                            startActivityForResult(new Intent(android.provider.Settings.ACTION_SETTINGS), 0);
+                            //launch settings tab.
+                        }
+
+                    });
+
+
+            View internetconenctivitysnackBarView = internetconnectivitysnackbar.getView();
+            internetconenctivitysnackBarView.setBackgroundColor(Color.parseColor("#cc0000"));
+            internetconnectivitysnackbar.show();
+        }
+
+        /**
+         * Check if GPS is connected
+         */
+        if (!isGPSEnabled()) {
+
+            Snackbar gpsconnectivitysnackbar = Snackbar.make
+                    (
+                            myinflater.findViewById(R.id.map),
+                            "No GPS connectivity",
+                            Snackbar.LENGTH_LONG
+                    )
+                    .setDuration(6000)
+                    .setAction("Enable", new View.OnClickListener() {
+
+                        @Override
+                        public void onClick(View v) {
+                            startActivityForResult(new Intent(android.provider.Settings.ACTION_SETTINGS), 0);
+                            //launch settings tab.
+                        }
+
+                    });
+
+
+            View gpsconenctivitysnackBarView = gpsconnectivitysnackbar.getView();
+            gpsconenctivitysnackBarView.setBackgroundColor(Color.parseColor("#cc0000"));
+            gpsconnectivitysnackbar.show();
+        }
 
 
         AutoCompleteTextView autoCompView = (AutoCompleteTextView) myinflater.findViewById(R.id.autoCompleteTextView);
@@ -115,6 +172,7 @@ public class TabFragmentOne extends Fragment implements
         autoCompView.setAdapter(new GooglePlacesAutocompleteAdapter(getContext(), R.layout.list_item));
 
         autoCompView.setOnItemClickListener(this);
+
 
         mGoogleMap.setMapType(GoogleMap.MAP_TYPE_HYBRID);
 
@@ -134,6 +192,34 @@ public class TabFragmentOne extends Fragment implements
         return myinflater;
     }
 
+    private boolean isNetworkConnected() {
+
+        ConnectivityManager conMan = (ConnectivityManager) getContext().getSystemService(Context.CONNECTIVITY_SERVICE);
+
+        //mobile
+        NetworkInfo.State mobile = conMan.getNetworkInfo(ConnectivityManager.TYPE_MOBILE).getState();
+
+        //wifi
+        NetworkInfo.State wifi = conMan.getNetworkInfo(ConnectivityManager.TYPE_WIFI).getState();
+
+        if (
+                (mobile != NetworkInfo.State.CONNECTED || mobile != NetworkInfo.State.CONNECTING)
+                        &&
+                        (wifi != NetworkInfo.State.CONNECTED || wifi != NetworkInfo.State.CONNECTING)
+                ) {
+            Log.d("Not  Connected to ", " WIFI");
+
+            return false;
+        }
+        return true;
+    }
+
+    private boolean isGPSEnabled() {
+        LocationManager locationManager = (LocationManager)
+                getContext().getSystemService(Context.LOCATION_SERVICE);
+        return locationManager.isProviderEnabled(locationManager.GPS_PROVIDER);
+    }
+    
 
     public void onItemClick(AdapterView adapterView, View view, int position, long id) {
         Log.d("Inside", "onItemClick");

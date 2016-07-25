@@ -1,26 +1,49 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content">
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
 
-    <LinearLayout
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:weightSum="10">
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceMedium"
-        android:text="Large Text"
-        android:id="@+id/nameTextView"
-        />
+    >
 
     <ImageView
+        android:id="@+id/imageViewHolder"
+        android:layout_width="300dp"
+        android:layout_height="84dp"
+        android:layout_marginLeft="8dp"
+        android:layout_marginRight="8dp"
+        android:contentDescription="icon"
+
+        android:layout_alignParentTop="true"
+        android:layout_above="@+id/nameTextView"
+        android:layout_alignStart="@+id/nameTextView"
+        android:layout_alignEnd="@+id/nameTextView" />
+    <TextView
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:textColor="@android:color/darker_gray"
+        android:layout_marginLeft="8dp"
+        android:layout_marginRight="8dp"
+        android:textSize="33dp"
+        android:text="Restro"
+        android:id="@+id/nameTextView"
+        android:layout_above="@+id/listrating"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="35dp" />
+
+
+
+
+
+    <RatingBar
+        android:id="@+id/listrating"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:id="@+id/imageViewHolder"
-        />
-    </LinearLayout>
+        android:numStars="5"
+        android:text="rating"
+        android:stepSize="0.1"
+        android:isIndicator="true"
+        android:theme="@style/RatingBar"
+        android:layout_centerVertical="true"
+        android:layout_alignStart="@+id/nameTextView" />
+
 </RelativeLayout>
