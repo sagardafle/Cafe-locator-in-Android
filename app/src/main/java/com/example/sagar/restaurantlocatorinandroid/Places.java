@@ -2,6 +2,7 @@ package com.example.sagar.restaurantlocatorinandroid;
 
 import android.util.Log;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -90,34 +91,43 @@ public class Places implements Serializable,Comparable{
         this.vicinity = vicinity;
     }
 
-    public  static Places jsonToPontoReferencia(JSONObject pontoReferencia) {
+    public  static Places extractJSONData(JSONObject jsonObject) {
         try {
-            Log.d("jsonToPontoReferencia", pontoReferencia.toString());
+            Log.d("extractJSONData", jsonObject.toString());
             Places result = new Places();
-            JSONObject geometry = (JSONObject) pontoReferencia.get("geometry");
+
+            JSONObject geometry = (JSONObject) jsonObject.get("geometry");
             JSONObject location = (JSONObject) geometry.get("location");
             result.setLatitude((Double) location.get("lat"));
             result.setLongitude((Double) location.get("lng"));
-            result.setIcon(pontoReferencia.getString("icon"));
-            result.setName(pontoReferencia.getString("name"));
-            result.setVicinity(pontoReferencia.getString("vicinity"));
+            result.setIcon(jsonObject.getString("icon"));
+            result.setName(jsonObject.getString("name"));
+            result.setVicinity(jsonObject.getString("vicinity"));
 
-            if(pontoReferencia.has("id")) {
-                result.setPhotoreference(pontoReferencia.getString("id"));
+            if(jsonObject.has("id")) {
+                result.setId(jsonObject.getString("id"));
             }
 
-            if(pontoReferencia.has("reference")) {
-                result.setPhotoreference(pontoReferencia.getString("reference"));
-            }
 
-            if (pontoReferencia.has("rating")) {
-                Log.d("Ratings value!!!" , String.valueOf( pontoReferencia.get("rating")));
-                result.setRating(Float.valueOf(String.valueOf(pontoReferencia.get("rating"))));
+            if (jsonObject.has("rating")) {
+                Log.d("Ratings value!!!" , String.valueOf( jsonObject.get("rating")));
+                result.setRating(Float.valueOf(String.valueOf(jsonObject.get("rating"))));
             }
             else {
                 result.setRating(new Float(0.0));
             }
 
+
+            if(jsonObject.has("photos")) {
+                JSONArray photosdata = (JSONArray) jsonObject.getJSONArray("photos");
+                Log.d("photosdata" ,photosdata.toString());
+
+                String photo_reference = ((JSONObject)photosdata.get(0)).get("photo_reference").toString();
+                result.setPhotoreference(photo_reference);
+                Log.d("photo_reference" , photo_reference);
+            } else {
+                Log.d("photosdata" , "not found");
+            }
 
             return result;
         } catch (JSONException ex) {

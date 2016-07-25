@@ -111,22 +111,26 @@ public class TabFragmentTwo extends Fragment {
             mRatingsView.setRating(ratingvalue);
 
 
-
+            String restaurantpic ;
             String url = mPlaces.getIcon();
             String photoreference = mPlaces.getPhotoreference();
-            String restaurantpic = "http://maps.googleapis.com/maps/api/place/photo?" +
-                    "maxwidth=400" +
-                    "&photoreference=" +photoreference +
-                    "&key="+API_KEY;
+            if(photoreference==null){
+                Log.d("NO ", "Photo found");
+                restaurantpic = "http://www.comohotels.com/metropolitanbangkok/sites/default/files/styles/440x138/public/images/nonlinking/metbkk_nahm_seating.jpg?itok=0Gvum0Hl";
+            } else {
+                restaurantpic = "https://maps.googleapis.com/maps/api/place/photo?" +
+                        "maxwidth=400" +
+                        "&photoreference=" +photoreference +
+                        "&key="+API_KEY;
+            }
 
         Log.d("Loading restaurantpic" , restaurantpic);
 
             Glide
                     .with(mContext)
-                    .load("https://i.ytimg.com/vi/QItqbV9xSBo/hqdefault.jpg")
+                    .load(restaurantpic)
                     .centerCrop()
-                   // .placeholder(R.drawable.loading_spinner)
-                    //.crossFade()
+                    .crossFade()
                     .into(mImageViewIcon);
         }
 

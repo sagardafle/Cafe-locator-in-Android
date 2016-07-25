@@ -98,7 +98,7 @@ public class GetNearByLocation {
         @Override
         protected void onPostExecute(String str) {
 
-            //Log.d("Final++++", str);
+            Log.d("Final++++", str);
             super.onPostExecute(str);
           //  parseJSON(str);
             JSONObject object = null;
@@ -125,7 +125,7 @@ public class GetNearByLocation {
 
             for (int i = 0; i < array.length(); i++) {
                 try {
-                    Places places = Places.jsonToPontoReferencia((JSONObject) array.get(i));
+                    Places places = Places.extractJSONData((JSONObject) array.get(i));
                     arrayList.add(places);
                 } catch (Exception e) {
                 }

@@ -61,7 +61,7 @@ public class TabFragmentOne extends Fragment implements
     private static final String ARG_EXAMPLE = "this_is_a_constant";
     private static final float DEFAULTZOOM = 16.0f;
     private String example_data;
-    private CoordinatorLayout coordinatorLayout;
+    private static CoordinatorLayout coordinatorLayout;
     GoogleMap mGoogleMap;
     static double destination_latitude;
     static double destination_longitude;
@@ -109,65 +109,25 @@ public class TabFragmentOne extends Fragment implements
                 .findFragmentById(R.id.map)).getMap();
 
 
-        final CoordinatorLayout coordinatorLayout = (CoordinatorLayout) myinflater.findViewById(R.id
+         coordinatorLayout = (CoordinatorLayout) myinflater.findViewById(R.id
                 .coordinatorLayout);
         /**
          * Check if mobile or wifi is connected
          */
-        if (!isNetworkConnected()) {
-            Snackbar internetconnectivitysnackbar = Snackbar.make
-                    (
-                            coordinatorLayout,
-                            "No internet connectivity",
-                            Snackbar.LENGTH_LONG
-                    )
-                    .setDuration(6000)
-                    .setAction("Enable", new View.OnClickListener() {
+        checkForNetworkError();
 
-                        @Override
-                        public void onClick(View v) {
-                            startActivityForResult(new Intent(android.provider.Settings.ACTION_SETTINGS), 0);
-                            //launch settings tab.
-                        }
-
-                    });
-
-
-            View internetconenctivitysnackBarView = internetconnectivitysnackbar.getView();
-            internetconenctivitysnackBarView.setBackgroundColor(Color.parseColor("#cc0000"));
-            internetconnectivitysnackbar.show();
-        }
 
         /**
          * Check if GPS is connected
          */
-        if (!isGPSEnabled()) {
 
-            Snackbar gpsconnectivitysnackbar = Snackbar.make
-                    (
-                            myinflater.findViewById(R.id.map),
-                            "No GPS connectivity",
-                            Snackbar.LENGTH_LONG
-                    )
-                    .setDuration(6000)
-                    .setAction("Enable", new View.OnClickListener() {
-
-                        @Override
-                        public void onClick(View v) {
-                            startActivityForResult(new Intent(android.provider.Settings.ACTION_SETTINGS), 0);
-                            //launch settings tab.
-                        }
-
-                    });
-
-
-            View gpsconenctivitysnackBarView = gpsconnectivitysnackbar.getView();
-            gpsconenctivitysnackBarView.setBackgroundColor(Color.parseColor("#cc0000"));
-            gpsconnectivitysnackbar.show();
-        }
+        checkforGPSError();
 
 
         AutoCompleteTextView autoCompView = (AutoCompleteTextView) myinflater.findViewById(R.id.autoCompleteTextView);
+
+       checkForNetworkError();
+
 
         autoCompView.setAdapter(new GooglePlacesAutocompleteAdapter(getContext(), R.layout.list_item));
 
@@ -192,6 +152,61 @@ public class TabFragmentOne extends Fragment implements
         return myinflater;
     }
 
+    private void checkforGPSError() {
+
+        if (!isGPSEnabled()) {
+
+            Snackbar gpsconnectivitysnackbar = Snackbar.make
+                    (
+                            myinflater.findViewById(R.id.map),
+                            "No GPS connectivity",
+                            Snackbar.LENGTH_LONG
+                    )
+                    .setDuration(6000)
+                    .setAction("Enable", new View.OnClickListener() {
+
+                        @Override
+                        public void onClick(View v) {
+                            startActivityForResult(new Intent(android.provider.Settings.ACTION_SETTINGS), 0);
+                            //launch settings tab.
+                        }
+
+                    });
+
+
+            View gpsconenctivitysnackBarView = gpsconnectivitysnackbar.getView();
+            gpsconenctivitysnackBarView.setBackgroundColor(Color.parseColor("#cc0000"));
+            gpsconnectivitysnackbar.show();
+        }
+    }
+
+    private void checkForNetworkError() {
+
+        if (!isNetworkConnected()) {
+            Snackbar internetconnectivitysnackbar = Snackbar.make
+                    (
+                            coordinatorLayout,
+                            "No internet connectivity",
+                            Snackbar.LENGTH_LONG
+                    )
+                    .setDuration(6000)
+                    .setAction("Enable", new View.OnClickListener() {
+
+                        @Override
+                        public void onClick(View v) {
+                            startActivityForResult(new Intent(android.provider.Settings.ACTION_SETTINGS), 0);
+                            //launch settings tab.
+                        }
+
+                    });
+
+
+            View internetconenctivitysnackBarView = internetconnectivitysnackbar.getView();
+            internetconenctivitysnackBarView.setBackgroundColor(Color.parseColor("#cc0000"));
+            internetconnectivitysnackbar.show();
+        }
+    }
+
     private boolean isNetworkConnected() {
 
         ConnectivityManager conMan = (ConnectivityManager) getContext().getSystemService(Context.CONNECTIVITY_SERVICE);
@@ -203,11 +218,11 @@ public class TabFragmentOne extends Fragment implements
         NetworkInfo.State wifi = conMan.getNetworkInfo(ConnectivityManager.TYPE_WIFI).getState();
 
         if (
-                (mobile != NetworkInfo.State.CONNECTED || mobile != NetworkInfo.State.CONNECTING)
+                (mobile != NetworkInfo.State.CONNECTED)
                         &&
-                        (wifi != NetworkInfo.State.CONNECTED || wifi != NetworkInfo.State.CONNECTING)
+                (wifi != NetworkInfo.State.CONNECTED)
                 ) {
-            Log.d("Not  Connected to ", " WIFI");
+            Log.d("Not  Connected to ", " network");
 
             return false;
         }
@@ -219,7 +234,7 @@ public class TabFragmentOne extends Fragment implements
                 getContext().getSystemService(Context.LOCATION_SERVICE);
         return locationManager.isProviderEnabled(locationManager.GPS_PROVIDER);
     }
-    
+
 
     public void onItemClick(AdapterView adapterView, View view, int position, long id) {
         Log.d("Inside", "onItemClick");
