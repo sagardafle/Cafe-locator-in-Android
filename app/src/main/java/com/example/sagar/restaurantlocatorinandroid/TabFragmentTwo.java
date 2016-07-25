@@ -86,12 +86,13 @@ public class TabFragmentTwo extends Fragment {
             recyclerView.setItemAnimator(new DefaultItemAnimator());
     }
 
-    private static class RestaurantListHolder extends RecyclerView.ViewHolder
+    private class RestaurantListHolder extends RecyclerView.ViewHolder
             implements View.OnClickListener {
 
         private TextView mNameTextView;
         private ImageView mImageViewIcon;
         private RatingBar mRatingsView;
+        private ImageView mIsRestaurantOpen;
 
         private Places mPlaces;
 
@@ -102,21 +103,36 @@ public class TabFragmentTwo extends Fragment {
             mNameTextView = (TextView) itemView.findViewById(R.id.nameTextView);
             mImageViewIcon = (ImageView)  itemView.findViewById(R.id.imageViewHolder);
             mRatingsView = (RatingBar) itemView.findViewById(R.id.listrating);
+            mIsRestaurantOpen = (ImageView) itemView.findViewById(R.id.opennow);
         }
 
         public void bindRestaurants(Places places) {
+            String isOpen = "false";
             mPlaces = places;
             mNameTextView.setText(mPlaces.getName());
             float ratingvalue = (Float) mPlaces.getRating();
             mRatingsView.setRating(ratingvalue);
+            isOpen  =  mPlaces.getOpennow();
+            if(isOpen!=null){
+                Log.d("IsOpen value in final" ,isOpen);
+            } else {
+                Log.d("IsOpen " ,"value in final");
+            }
 
+
+            if(isOpen == "true"){
+                mIsRestaurantOpen.setImageDrawable(getResources().getDrawable(R.drawable.open_sign));
+
+            } else {
+                mIsRestaurantOpen.setImageDrawable(getResources().getDrawable(R.drawable.is_not_open));
+            }
 
             String restaurantpic ;
             String url = mPlaces.getIcon();
             String photoreference = mPlaces.getPhotoreference();
             if(photoreference==null){
                 Log.d("NO ", "Photo found");
-                restaurantpic = "http://www.comohotels.com/metropolitanbangkok/sites/default/files/styles/440x138/public/images/nonlinking/metbkk_nahm_seating.jpg?itok=0Gvum0Hl";
+                restaurantpic = "http://il1.picdn.net/shutterstock/videos/1679470/thumb/1.jpg?i10c=img.resize(height:160)";
             } else {
                 restaurantpic = "https://maps.googleapis.com/maps/api/place/photo?" +
                         "maxwidth=400" +

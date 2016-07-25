@@ -24,6 +24,16 @@ public class Places implements Serializable,Comparable{
     private Double longitude;
     private Float rating;
 
+    public String getOpennow() {
+        return opennow;
+    }
+
+    public void setOpennow(String opennow) {
+        this.opennow = opennow;
+    }
+
+    private String opennow;
+
     public String getPhotoreference() {
         return photoreference;
     }
@@ -127,6 +137,22 @@ public class Places implements Serializable,Comparable{
                 Log.d("photo_reference" , photo_reference);
             } else {
                 Log.d("photosdata" , "not found");
+            }
+
+            if(jsonObject.has("opening_hours")) {
+                String isopen = "false";
+                JSONObject openhrsobj = (JSONObject)jsonObject.get("opening_hours");
+                openhrsobj.get("open_now");
+                Log.d("OPENHOURS" , String.valueOf(openhrsobj.get("open_now")));
+
+                if (String.valueOf(openhrsobj.get("open_now")) == "true") {
+                    isopen = "true";
+                    //result.setOpennow(isopen);
+                } else {
+                    isopen = "false";
+
+                }
+                result.setOpennow(isopen);
             }
 
             return result;

@@ -31,11 +31,17 @@
 
 
 
-
+<ImageView
+    android:layout_width="80dp"
+    android:layout_height="80dp"
+    android:id="@+id/opennow"
+    android:layout_marginLeft="10dp"
+    android:layout_toEndOf="@+id/listrating"
+    android:layout_alignTop="@+id/listrating" />
 
     <RatingBar
         android:id="@+id/listrating"
-        android:layout_width="wrap_content"
+        android:layout_width="280dp"
         android:layout_height="70dp"
         android:numStars="5"
         android:text="rating"
@@ -46,6 +52,7 @@
         android:layout_alignParentBottom="true"
         android:layout_alignStart="@+id/imageViewHolder" />
 
-    <View style="@style/Divider"/>
+    <View style="@style/Divider"
+        android:id="@+id/view" />
 
 </RelativeLayout>
