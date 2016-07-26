@@ -24,6 +24,16 @@ public class Places implements Serializable,Comparable{
     private Double longitude;
     private Float rating;
 
+    public int getPrice_level() {
+        return price_level;
+    }
+
+    public void setPrice_level(int price_level) {
+        this.price_level = price_level;
+    }
+
+    private int price_level;
+
     public String getOpennow() {
         return opennow;
     }
@@ -112,12 +122,15 @@ public class Places implements Serializable,Comparable{
             result.setLongitude((Double) location.get("lng"));
             result.setIcon(jsonObject.getString("icon"));
             result.setName(jsonObject.getString("name"));
-            result.setVicinity(jsonObject.getString("vicinity"));
+
+
+            if(jsonObject.has("vicinity")){
+                result.setVicinity(jsonObject.getString("vicinity"));
+            }
 
             if(jsonObject.has("id")) {
                 result.setId(jsonObject.getString("id"));
             }
-
 
             if (jsonObject.has("rating")) {
                 Log.d("Ratings value!!!" , String.valueOf( jsonObject.get("rating")));
@@ -127,6 +140,11 @@ public class Places implements Serializable,Comparable{
                 result.setRating(new Float(0.0));
             }
 
+            if(jsonObject.has("price_level")){
+                result.setPrice_level(Integer.valueOf(String.valueOf(jsonObject.get("price_level"))));
+            } else {
+                result.setPrice_level(1);
+            }
 
             if(jsonObject.has("photos")) {
                 JSONArray photosdata = (JSONArray) jsonObject.getJSONArray("photos");

@@ -11,8 +11,8 @@
     </style>
 
     <style name="RatingBar" parent="Theme.AppCompat">
-        <item name="colorControlNormal">@color/duskYellow</item>
-        <item name="colorControlActivated">@color/lightGrey</item>
+        <item name="colorControlNormal">@color/lightGrey</item>
+        <item name="colorControlActivated">@color/duskYellow</item>
     </style>
 
     <style name="Divider">

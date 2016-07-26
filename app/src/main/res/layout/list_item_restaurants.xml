@@ -41,7 +41,7 @@
 
     <RatingBar
         android:id="@+id/listrating"
-        android:layout_width="280dp"
+        android:layout_width="wrap_content"
         android:layout_height="70dp"
         android:numStars="5"
         android:text="rating"

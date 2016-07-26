@@ -6,7 +6,9 @@ import android.location.Location;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.design.widget.TabLayout;
+import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 
@@ -17,6 +19,7 @@ import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.Marker;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class MapsActivity extends AppCompatActivity {
 
@@ -28,10 +31,10 @@ public class MapsActivity extends AppCompatActivity {
     Marker mCurrLocationMarker;
     private static final String TAG = "MapsActivity";
     private ViewPager viewPager;
-    private TabLayout tabLayout;
+    public static TabLayout tabLayout;
     static ViewPagerAdapter adapter;
     static ConnectivityManager connectivity;
-    private int[] tabIcons = {R.drawable.ic_menu_map,R.drawable.ic_menu_list};
+    public static int[] tabIcons = {R.drawable.ic_restaurant_black,R.drawable.ic_receipt_black};
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -61,7 +64,16 @@ public class MapsActivity extends AppCompatActivity {
 
     }
 
-
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        List<Fragment> fragments = getSupportFragmentManager().getFragments();
+        if (fragments != null) {
+            for (Fragment fragment : fragments) {
+                fragment.onRequestPermissionsResult(requestCode, permissions, grantResults);
+            }
+        }
+    }
         public static boolean isConnectedToInternet(){
             if (connectivity != null)
             {

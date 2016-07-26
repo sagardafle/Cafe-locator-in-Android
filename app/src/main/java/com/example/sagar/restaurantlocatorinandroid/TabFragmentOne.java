@@ -32,6 +32,7 @@ import android.widget.AutoCompleteTextView;
 import android.widget.Toast;
 
 import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.GoogleApiAvailability;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.location.LocationListener;
 import com.google.android.gms.location.LocationRequest;
@@ -96,6 +97,54 @@ public class TabFragmentOne extends Fragment implements
             checkLocationPermission();
         }
 
+        requestPermissionForPlayServices();
+
+        requestPermissionFOrInternet();
+
+    }
+
+    private void requestPermissionFOrInternet() {
+        if (ActivityCompat.shouldShowRequestPermissionRationale(getActivity(),
+                android.Manifest.permission.INTERNET)) {
+            Log.d("Not asking permission", " internet");
+        } else {
+            Log.d("Asking permission", " internet");
+            ActivityCompat.requestPermissions(getActivity(),
+                    new String[]{android.Manifest.permission.INTERNET},
+                    MY_PERMISSIONS_REQUEST_INTERNET);
+
+        }
+
+    }
+
+    private void requestPermissionForPlayServices() {
+
+//        // Here, thisActivity is the current activity
+//        if (ContextCompat.checkSelfPermission(getActivity(),
+//                android.Manifest.permission.)
+//                != PackageManager.PERMISSION_GRANTED) {
+//
+//            // Should we show an explanation?
+//            if (ActivityCompat.shouldShowRequestPermissionRationale(getActivity(),
+//                    android.Manifest.permission.READ_CONTACTS)) {
+//
+//                // Show an expanation to the user *asynchronously* -- don't block
+//                // this thread waiting for the user's response! After the user
+//                // sees the explanation, try again to request the permission.
+//
+//            } else {
+//
+//                // No explanation needed, we can request the permission.
+//
+//                ActivityCompat.requestPermissions(getActivity(),
+//                        new String[]{android.Manifest.permission.READ_CONTACTS},
+//                        MY_PERMISSIONS_REQUEST_READ_CONTACTS);
+//
+//                // MY_PERMISSIONS_REQUEST_READ_CONTACTS is an
+//                // app-defined int constant. The callback method gets the
+//                // result of the request.
+//            }
+//        }
     }
 
 
@@ -109,13 +158,13 @@ public class TabFragmentOne extends Fragment implements
                 .findFragmentById(R.id.map)).getMap();
 
 
-         coordinatorLayout = (CoordinatorLayout) myinflater.findViewById(R.id
+        coordinatorLayout = (CoordinatorLayout) myinflater.findViewById(R.id
                 .coordinatorLayout);
+
         /**
          * Check if mobile or wifi is connected
          */
         checkForNetworkError();
-
 
         /**
          * Check if GPS is connected
@@ -124,9 +173,14 @@ public class TabFragmentOne extends Fragment implements
         checkforGPSError();
 
 
+        /**
+         * check for PlayServices error
+         */
+        isPlayServicesEnabled();
+
         AutoCompleteTextView autoCompView = (AutoCompleteTextView) myinflater.findViewById(R.id.autoCompleteTextView);
 
-       checkForNetworkError();
+        // checkForNetworkError();
 
 
         autoCompView.setAdapter(new GooglePlacesAutocompleteAdapter(getContext(), R.layout.list_item));
@@ -134,7 +188,7 @@ public class TabFragmentOne extends Fragment implements
         autoCompView.setOnItemClickListener(this);
 
 
-        mGoogleMap.setMapType(GoogleMap.MAP_TYPE_HYBRID);
+        mGoogleMap.setMapType(GoogleMap.MAP_TYPE_NORMAL);
 
         //Initialize Google Play Services
         if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
@@ -152,6 +206,7 @@ public class TabFragmentOne extends Fragment implements
         return myinflater;
     }
 
+
     private void checkforGPSError() {
 
         if (!isGPSEnabled()) {
@@ -160,9 +215,9 @@ public class TabFragmentOne extends Fragment implements
                     (
                             myinflater.findViewById(R.id.map),
                             "No GPS connectivity",
-                            Snackbar.LENGTH_LONG
+                            Snackbar.LENGTH_INDEFINITE
                     )
-                    .setDuration(6000)
+                    .setDuration(15000)
                     .setAction("Enable", new View.OnClickListener() {
 
                         @Override
@@ -187,9 +242,9 @@ public class TabFragmentOne extends Fragment implements
                     (
                             coordinatorLayout,
                             "No internet connectivity",
-                            Snackbar.LENGTH_LONG
+                            Snackbar.LENGTH_INDEFINITE
                     )
-                    .setDuration(6000)
+                    .setDuration(25000)
                     .setAction("Enable", new View.OnClickListener() {
 
                         @Override
@@ -220,7 +275,7 @@ public class TabFragmentOne extends Fragment implements
         if (
                 (mobile != NetworkInfo.State.CONNECTED)
                         &&
-                (wifi != NetworkInfo.State.CONNECTED)
+                        (wifi != NetworkInfo.State.CONNECTED)
                 ) {
             Log.d("Not  Connected to ", " network");
 
@@ -233,6 +288,51 @@ public class TabFragmentOne extends Fragment implements
         LocationManager locationManager = (LocationManager)
                 getContext().getSystemService(Context.LOCATION_SERVICE);
         return locationManager.isProviderEnabled(locationManager.GPS_PROVIDER);
+    }
+
+
+    private void isPlayServicesEnabled() {
+        GoogleApiAvailability api = GoogleApiAvailability.getInstance();
+        int code = api.isGooglePlayServicesAvailable(getActivity());
+        if (code == ConnectionResult.SUCCESS) {
+            Log.d("PlayServices are ", "enabled");
+        } else {
+
+            Snackbar playservicessnackbar = Snackbar.make
+                    (
+                            coordinatorLayout,
+                            "No PlayServices are disabled",
+                            Snackbar.LENGTH_INDEFINITE
+                    )
+                    .setDuration(15000)
+                    .setAction("Enable", new View.OnClickListener() {
+
+                        @Override
+                        public void onClick(View v) {
+                            startActivityForResult(new Intent(android.provider.Settings.ACTION_SETTINGS), 0);
+                            //launch settings tab.
+                            if (ActivityCompat.checkSelfPermission(getActivity(), android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(getActivity(), android.Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+                                // TODO: Consider calling
+                                //    ActivityCompat#requestPermissions
+                                // here to request the missing permissions, and then overriding
+                                //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
+                                //                                          int[] grantResults)
+                                // to handle the case where the user grants the permission. See the documentation
+                                // for ActivityCompat#requestPermissions for more details.
+                                return;
+                            }
+                            mGoogleMap.setMyLocationEnabled(true);
+
+                        }
+
+                    });
+
+
+            View pservicesview = playservicessnackbar.getView();
+            pservicesview.setBackgroundColor(Color.parseColor("#cc0000"));
+            playservicessnackbar.show();
+
+        }
     }
 
 
@@ -310,7 +410,7 @@ public class TabFragmentOne extends Fragment implements
 
         //stop location updates when Activity is no longer active
         if (mGoogleApiClient != null) {
-            LocationServices.FusedLocationApi.removeLocationUpdates(mGoogleApiClient, this);
+//            LocationServices.FusedLocationApi.removeLocationUpdates(mGoogleApiClient, this);
         }
     }
 
@@ -370,7 +470,7 @@ public class TabFragmentOne extends Fragment implements
 
         //move map camera
         mGoogleMap.moveCamera(CameraUpdateFactory.newLatLng(latLng));
-        mGoogleMap.animateCamera(CameraUpdateFactory.zoomTo(11));
+        mGoogleMap.animateCamera(CameraUpdateFactory.zoomTo(10));
 
         mGoogleMap.setMapType(GoogleMap.MAP_TYPE_NORMAL); //set the view to normal mode
 
@@ -381,6 +481,7 @@ public class TabFragmentOne extends Fragment implements
     }
 
     public static final int MY_PERMISSIONS_REQUEST_LOCATION = 99;
+    public static final int MY_PERMISSIONS_REQUEST_INTERNET = 98;
 
     public boolean checkLocationPermission() {
         Log.d("Inside ", "check permsission");

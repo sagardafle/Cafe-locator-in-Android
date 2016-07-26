@@ -116,7 +116,10 @@ class GooglePlacesAutocompleteAdapter extends ArrayAdapter implements Filterable
                 System.out.println(predsJsonArray.getJSONObject(i).getString("description"));
                 System.out.println("============================================================");
                 resultList.add(predsJsonArray.getJSONObject(i).getString("description"));
+//                MapsActivity.tabLayout.getTabAt(0).setIcon(MapsActivity.tabIcons[0]);
+//                MapsActivity.tabLayout.getTabAt(1).setIcon(MapsActivity.tabIcons[1]);
             }
+
         } catch (JSONException e) {
             Log.e(LOG_TAG, "Error ", e);
         }

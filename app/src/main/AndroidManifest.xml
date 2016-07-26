@@ -9,6 +9,8 @@
    -->
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <!--<uses-permission android:name="android.permission.INTERNET" />-->
+
 
     <uses-permission android:name="com.google.android.providers.gsf.permission.READ_GSERVICES"/>
     <uses-permission android:name="android.permission.INTERNET"/>
@@ -17,7 +19,7 @@
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:supportsRtl="true"
-        android:theme="@style/Theme.AppCompat.Light">
+        android:theme="@style/MyMaterialTheme.Base">
 
         <intent-filter>
             <action android:name="android.intent.action.MAIN" />
@@ -38,6 +40,13 @@
         <meta-data
             android:name="com.google.android.geo.API_KEY"
             android:value="AIzaSyAQAmjM49jdoymlvd1pTDaLsZHC-O07z5o"/>
+
+        <activity
+            android:name=".DetailedView"
+            android:label="@string/detailedView">
+
+        </activity>
+
 
         <activity
             android:name=".MapsActivity"

@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+
+    <ImageView
+        android:layout_width="80dp"
+        android:layout_height="80dp"
+        android:id="@+id/detailedopennow"
+        android:layout_marginLeft="10dp"
+        android:text="Open Now"
+        android:layout_above="@+id/detailedlistrating"
+        android:layout_alignEnd="@+id/detailedVicinityView" />
+
+    <ImageView
+        android:layout_width="80dp"
+        android:layout_height="80dp"
+        android:id="@+id/detailedcost"
+
+        android:text="COST"
+        android:layout_marginLeft="10dp"
+        android:layout_above="@+id/detailedVicinityView"
+        android:layout_alignStart="@+id/detailednameTextView" />
+
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="120dp"
+        android:layout_marginBottom="30dp"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="15dp"
+        android:id="@+id/detailmainimage"
+        android:text="Main Image"
+
+        android:layout_above="@+id/detailednameTextView"
+        android:layout_alignStart="@+id/detailedcost" />
+
+    <TextView
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:textColor="@android:color/darker_gray"
+        android:layout_marginLeft="8dp"
+        android:layout_marginRight="8dp"
+        android:textSize="33dp"
+        android:gravity="center"
+        android:textStyle="bold"
+        android:text="Restro"
+        android:id="@+id/detailednameTextView"
+        android:layout_above="@+id/detailedopennow"
+        android:layout_alignParentEnd="true" />
+
+    <RatingBar
+        android:id="@+id/detailedlistrating"
+        android:layout_width="wrap_content"
+        android:layout_height="70dp"
+        android:numStars="5"
+        android:text="rating"
+        android:stepSize="0.1"
+        android:isIndicator="true"
+        android:theme="@style/RatingBar"
+        android:paddingTop="20dp"
+        android:layout_marginBottom="189dp"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true" />
+    <TextView
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:textColor="@android:color/darker_gray"
+        android:layout_marginLeft="8dp"
+        android:layout_marginRight="8dp"
+        android:textSize="33dp"
+        android:text="Vicinity"
+        android:textStyle="italic"
+        android:id="@+id/detailedVicinityView"
+
+        android:layout_marginTop="102dp"
+        android:layout_below="@+id/detailedopennow"
+        android:layout_alignParentEnd="true" />
+
+
+</RelativeLayout>

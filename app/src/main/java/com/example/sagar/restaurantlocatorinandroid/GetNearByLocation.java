@@ -56,7 +56,7 @@ public class GetNearByLocation {
         sb.append(destlatitude + "," + destlongitude);
         sb.append(RADIUS);
         sb.append(TYPE);
-        sb.append("restaurant");
+        sb.append("cafe");
         sb.append(API_KEY);
         String urlString = sb.toString();
         Log.d("NEW URL IS", urlString);
@@ -69,6 +69,8 @@ public class GetNearByLocation {
 
 
     class CallHTTPServices extends AsyncTask<String, Void, String> {
+
+
 
         @Override
         protected String doInBackground(String... params) {
@@ -100,6 +102,7 @@ public class GetNearByLocation {
 
             Log.d("Final++++", str);
             super.onPostExecute(str);
+
           //  parseJSON(str);
             JSONObject object = null;
             try {
@@ -177,6 +180,8 @@ public class GetNearByLocation {
 
             MapsActivity.adapter.removeFragment();
                 MapsActivity.adapter.addFragment(TabFragmentTwo.newInstance(arrayList),"Section 2");
+
+
                 MapsActivity.adapter.notifyDataSetChanged();
                 //MapsActivity.adapter.getItem(1);
 

@@ -5,6 +5,7 @@ package com.example.sagar.restaurantlocatorinandroid;
  */
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -13,11 +14,14 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ImageView;
 import android.widget.RatingBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 
@@ -47,6 +51,7 @@ public class TabFragmentTwo extends Fragment {
             Log.d("checking",places.toString());
         }
 
+        Log.d("Sorting" , "arrayList");
         Collections.sort(restaurantList);
 
         return fragment;
@@ -68,6 +73,7 @@ public class TabFragmentTwo extends Fragment {
         recyclerView.setItemAnimator(new DefaultItemAnimator());
 
         updateUI();
+
         return view;
 
     }
@@ -128,6 +134,7 @@ public class TabFragmentTwo extends Fragment {
             }
 
             String restaurantpic ;
+            //int price_level = mPlaces.getPrice_level();
             String url = mPlaces.getIcon();
             String photoreference = mPlaces.getPhotoreference();
             if(photoreference==null){
@@ -166,13 +173,18 @@ public class TabFragmentTwo extends Fragment {
     }
 
 
-    private class RestaurantAdapter extends RecyclerView.Adapter<RestaurantListHolder> {
+    private class RestaurantAdapter extends RecyclerView.Adapter<RestaurantListHolder> implements RecyclerView.OnItemTouchListener {
         private ArrayList<Places> mRestaurantLists;
+        private AdapterView.OnItemClickListener mListener;
 
+
+
+        // private final View.OnClickListener mOnClickListener = new MyOnClickListener();
 
         public RestaurantAdapter(Context context,ArrayList<Places> restaurants) {
             mContext = context;
             mRestaurantLists = restaurants;
+            //Collections.sort(restaurants);
 
         }
 
@@ -184,15 +196,44 @@ public class TabFragmentTwo extends Fragment {
         }
 
         @Override
-        public void onBindViewHolder(RestaurantListHolder holder, int position) {
+        public void onBindViewHolder(RestaurantListHolder holder, final int position) {
+            final int receviedpossition = position;
             Places restaurants = mRestaurantLists.get(position);
             holder.bindRestaurants(restaurants);
+            holder.itemView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    //Toast.makeText(mContext, "Recycle Click" + receviedpossition , Toast.LENGTH_LONG).show();
+                    Intent i = new Intent(getActivity(), DetailedView.class);
+                    i.putExtra("ItemPosition" , String.valueOf(receviedpossition));
+                    i.putExtra("PlacesList" , mRestaurantLists);
+                    startActivity(i);
+                }
+            });
         }
 
+        //   @Override
+        public void onClick(View view) {
+            Toast.makeText(view.getContext(), "position = " + getItemId(0), Toast.LENGTH_SHORT).show();
+}
         @Override
         public int getItemCount() {
             return mRestaurantLists.size();
         }
 
+        @Override
+        public boolean onInterceptTouchEvent(RecyclerView rv, MotionEvent e) {
+            return false;
+        }
+
+        @Override
+        public void onTouchEvent(RecyclerView rv, MotionEvent e) {
+
+        }
+
+        @Override
+        public void onRequestDisallowInterceptTouchEvent(boolean disallowIntercept) {
+
+        }
     }
 }
