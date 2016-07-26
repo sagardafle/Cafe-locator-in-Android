@@ -37,6 +37,7 @@ public class ViewPagerAdapter extends FragmentPagerAdapter {
                 return TabFragmentTwo.newInstance(new ArrayList<Places>());
             }*/
         }
+
     }
 
     @Override public int getCount() {
